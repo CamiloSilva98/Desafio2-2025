@@ -12,7 +12,10 @@ SOURCES += \
         cancion.cpp \
         credito.cpp \
         fecha.cpp \
-        main.cpp
+        listafavoritos.cpp \
+        main.cpp \
+        publicidad.cpp \
+        usuario.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -25,4 +28,7 @@ HEADERS += \
     artista.h \
     cancion.h \
     credito.h \
-    fecha.h
+    fecha.h \
+    listafavoritos.h \
+    publicidad.h \
+    usuario.h
