@@ -1,11 +1,11 @@
 #include "Fecha.h"
 
-Fecha::Fecha()
-{
-    año = 2000;
-    mes = 1;
-    dia = 1;
-}
+//Fecha::Fecha()
+//{
+//    año = 2000;
+//    mes = 1;
+//    dia = 1;
+//}
 // Constructor parametrizado
 Fecha::Fecha(int año, int mes, int dia)
 {
