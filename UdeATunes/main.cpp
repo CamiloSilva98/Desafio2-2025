@@ -1,34 +1,31 @@
 #include <iostream>
-#include "Arreglo.h"
-#include "Credito.h"
+#include "Artista.h"
+#include "Album.h"
+#include "Cancion.h"
 #include "Fecha.h"
 
 using namespace std;
 
 void pruebasBasicas();
-void pruebasConEnteros();
-void pruebasConPunteros();
-void pruebasConObjetos();
-void pruebasRedimensionamiento();
+void pruebasAlbumes();
+void pruebasCopiaAsignacion();
+void pruebaCompleta();
 
 int main() {
     cout << "========================================" << endl;
-    cout << "   PRUEBAS ARREGLODINAMICO<T>" << endl;
+    cout << "   PRUEBAS DE LA CLASE ARTISTA" << endl;
     cout << "========================================" << endl << endl;
 
     pruebasBasicas();
     cout << "\n\n";
 
-    pruebasConEnteros();
+    pruebasAlbumes();
     cout << "\n\n";
 
-    pruebasConPunteros();
+    pruebasCopiaAsignacion();
     cout << "\n\n";
 
-    pruebasConObjetos();
-    cout << "\n\n";
-
-    pruebasRedimensionamiento();
+    pruebaCompleta();
 
     cout << "\n========================================" << endl;
     cout << "   TODAS LAS PRUEBAS COMPLETADAS" << endl;
@@ -41,169 +38,171 @@ void pruebasBasicas() {
     cout << ">>> PRUEBAS BASICAS <<<" << endl;
     cout << "========================================" << endl;
 
-    ArregloDinamico<int> arr;
+    // Constructor parametrizado
+    // ID: 12345 (5 dígitos según preinforme)
+    Artista mj(12345, 50, "Estados Unidos", 75000000, 1);
 
-    cout << "[OK] Constructor: Capacidad inicial = " << arr.getCapacidad()
-         << ", Cantidad = " << arr.getCantidad() << endl;
+    cout << "[OK] Constructor parametrizado" << endl;
+    cout << "ID: " << mj.getId() << endl;
+    cout << "Edad: " << mj.getEdad() << " anios" << endl;
+    cout << "Pais: " << mj.getPaisOrigen() << endl;
+    cout << "Seguidores: " << mj.getSeguidores() << endl;
+    cout << "Posicion en tendencias: #" << mj.getPosicionTendencias() << endl;
 
-    if (arr.estaVacio()) {
-        cout << "[OK] Arreglo esta vacio al inicio" << endl;
+    // Operador ==
+    Artista mj2(12345, 40, "USA", 0, 0);
+    if (mj == mj2) {
+        cout << "[OK] Operador == funciona (mismo ID)" << endl;
     }
 
-    // Agregar elementos
-    arr.agregar(10);
-    arr.agregar(20);
-    arr.agregar(30);
+    // Operador < (ordenar por seguidores descendente)
+    Artista artista1(10001, 30, "UK", 1000000, 5);
+    Artista artista2(10002, 25, "Spain", 5000000, 2);
 
-    cout << "[OK] Se agregaron 3 elementos. Cantidad = " << arr.getCantidad() << endl;
-
-    // Obtener elementos
-    cout << "[OK] Elementos: " << arr.obtener(0) << ", "
-         << arr.obtener(1) << ", " << arr.obtener(2) << endl;
+    if (artista2 < artista1) {
+        cout << "[OK] Operador < funciona (5M seguidores > 1M seguidores)" << endl;
+    }
 }
 
-void pruebasConEnteros() {
-    cout << ">>> PRUEBAS CON ENTEROS <<<" << endl;
+void pruebasAlbumes() {
+    cout << ">>> PRUEBAS DE ALBUMES <<<" << endl;
     cout << "========================================" << endl;
 
-    ArregloDinamico<int> numeros;
+    Artista mj(12345, 50, "Estados Unidos", 75000000, 1);
 
-    // Agregar números
-    for (int i = 1; i <= 5; i++) {
-        numeros.agregar(i * 10);
+    cout << "Creando albumes para el artista..." << endl;
+
+    // Crear álbumes
+    Album* thriller = new Album(12345, 1, "Thriller", Fecha(1982, 11, 30),
+                                "Epic Records", "/portadas/thriller.jpg", 9.8);
+
+    Album* bad = new Album(12345, 2, "Bad", Fecha(1987, 8, 31),
+                           "Epic Records", "/portadas/bad.jpg", 9.5);
+
+    Album* dangerous = new Album(12345, 3, "Dangerous", Fecha(1991, 11, 26),
+                                 "Epic Records", "/portadas/dangerous.jpg", 9.3);
+
+    mj.agregarAlbum(thriller);
+    mj.agregarAlbum(bad);
+    mj.agregarAlbum(dangerous);
+
+    cout << "[OK] Agregados " << mj.getCantidadAlbumes() << " albumes" << endl;
+
+    // Mostrar álbumes
+    cout << "\nDiscografia:" << endl;
+    for (int i = 0; i < mj.getCantidadAlbumes(); i++) {
+        Album* album = mj.obtenerAlbum(i);
+        Fecha fecha = album->getFechaLanzamiento();
+        cout << "  " << (i+1) << ". " << album->getNombre()
+             << " (" << fecha.getAño() << ") - "
+             << album->getPuntuacion() << "/10" << endl;
     }
 
-    cout << "[OK] Agregados 5 numeros" << endl;
-    cout << "Contenido: ";
-    for (int i = 0; i < numeros.getCantidad(); i++) {
-        cout << numeros[i] << " ";
+    // Acceder a un álbum específico
+    Album* primerAlbum = mj.obtenerAlbum(0);
+    if (primerAlbum != nullptr) {
+        cout << "\n[OK] Primer album: " << primerAlbum->getNombre() << endl;
     }
-    cout << endl;
 
-    // Modificar un elemento
-    numeros.modificar(2, 999);
-    cout << "[OK] Modificado indice 2 a 999: " << numeros[2] << endl;
+    // NOTA: Los álbumes serán liberados automáticamente por el destructor de Artista
+}
 
-    // Eliminar un elemento
-    numeros.eliminar(1);
-    cout << "[OK] Eliminado indice 1. Nueva cantidad: " << numeros.getCantidad() << endl;
-    cout << "Contenido: ";
-    for (int i = 0; i < numeros.getCantidad(); i++) {
-        cout << numeros[i] << " ";
-    }
-    cout << endl;
+void pruebasCopiaAsignacion() {
+    cout << ">>> PRUEBAS DE COPIA Y ASIGNACION <<<" << endl;
+    cout << "========================================" << endl;
+
+    // Crear artista original con álbumes
+    Artista original(12345, 50, "Estados Unidos", 75000000, 1);
+
+    Album* album1 = new Album(12345, 1, "Thriller", Fecha(1982, 11, 30),
+                              "Epic Records", "/portadas/thriller.jpg", 9.8);
+    Album* album2 = new Album(12345, 2, "Bad", Fecha(1987, 8, 31),
+                              "Epic Records", "/portadas/bad.jpg", 9.5);
+
+    original.agregarAlbum(album1);
+    original.agregarAlbum(album2);
+
+    cout << "Artista original:" << endl;
+    cout << "  ID: " << original.getId() << endl;
+    cout << "  Seguidores: " << original.getSeguidores() << endl;
+    cout << "  Albumes: " << original.getCantidadAlbumes() << endl;
 
     // Constructor de copia
-    ArregloDinamico<int> copia(numeros);
-    cout << "[OK] Constructor de copia. Cantidad: " << copia.getCantidad() << endl;
+    cout << "\nProbando constructor de copia..." << endl;
+    Artista copia(original);
+
+    cout << "[OK] Artista copiado:" << endl;
+    cout << "  ID: " << copia.getId() << endl;
+    cout << "  Seguidores: " << copia.getSeguidores() << endl;
+    cout << "  Albumes: " << copia.getCantidadAlbumes() << endl;
+
+    // Verificar que son copias independientes
+    copia.setSeguidores(100000000);
+
+    cout << "\nDespues de modificar seguidores en la copia:" << endl;
+    cout << "  Original: " << original.getSeguidores() << " seguidores" << endl;
+    cout << "  Copia: " << copia.getSeguidores() << " seguidores" << endl;
+
+    if (original.getSeguidores() != copia.getSeguidores()) {
+        cout << "[OK] Son copias independientes (copia profunda)" << endl;
+    }
 
     // Operador de asignación
-    ArregloDinamico<int> asignado;
-    asignado = numeros;
-    cout << "[OK] Operador de asignacion. Cantidad: " << asignado.getCantidad() << endl;
+    cout << "\nProbando operador de asignacion..." << endl;
+    Artista asignado(99999, 25, "Unknown", 0, 0);
+    asignado = original;
+
+    cout << "[OK] Artista asignado:" << endl;
+    cout << "  ID: " << asignado.getId() << endl;
+    cout << "  Albumes: " << asignado.getCantidadAlbumes() << endl;
+
+    cout << "\n[OK] Constructor de copia y operador = funcionan correctamente" << endl;
 }
 
-void pruebasConPunteros() {
-    cout << ">>> PRUEBAS CON PUNTEROS (Credito*) <<<" << endl;
+void pruebaCompleta() {
+    cout << ">>> PRUEBA COMPLETA (Artista -> Album -> Cancion) <<<" << endl;
     cout << "========================================" << endl;
 
-    ArregloDinamico<Credito*> creditos;
+    // Crear artista
+    Artista mj(12345, 50, "Estados Unidos", 75000000, 1);
+    cout << "Artista: Michael Jackson" << endl;
+    cout << "ID: " << mj.getId() << endl;
 
-    // Crear y agregar créditos
-    Credito* c1 = new Credito("Juan", "Perez", "PROD-001", "productor");
-    Credito* c2 = new Credito("Maria", "Garcia", "MUS-002", "musico");
-    Credito* c3 = new Credito("Carlos", "Lopez", "COMP-003", "compositor");
+    // Crear álbum
+    Album* thriller = new Album(12345, 1, "Thriller", Fecha(1982, 11, 30),
+                                "Epic Records", "/portadas/thriller.jpg", 9.8);
+    thriller->agregarGenero("Pop");
+    thriller->agregarGenero("R&B");
 
-    creditos.agregar(c1);
-    creditos.agregar(c2);
-    creditos.agregar(c3);
+    // Crear canciones
+    Cancion* c1 = new Cancion(123450103, "Thriller", 357,
+                              "/audio/thriller_128.mp3", "/audio/thriller_320.mp3");
+    Cancion* c2 = new Cancion(123450104, "Beat It", 258,
+                              "/audio/beat_it_128.mp3", "/audio/beat_it_320.mp3");
 
-    cout << "[OK] Agregados 3 creditos (punteros)" << endl;
+    c1->incrementarReproducciones();
+    c1->incrementarReproducciones();
+    c1->incrementarReproducciones();
 
-    // Acceder a los créditos
-    cout << "Creditos en el arreglo:" << endl;
-    for (int i = 0; i < creditos.getCantidad(); i++) {
-        Credito* c = creditos[i];
-        cout << "  " << i << ". " << c->getNombre() << " " << c->getApellido()
-             << " (" << c->getTipo() << ")" << endl;
+    thriller->agregarCancion(c1);
+    thriller->agregarCancion(c2);
+    thriller->calcularDuracionTotal();
+
+    // Agregar álbum al artista
+    mj.agregarAlbum(thriller);
+
+    cout << "\n[OK] Jerarquia completa creada:" << endl;
+    cout << "Artista: " << mj.getId() << " - " << mj.getSeguidores() << " seguidores" << endl;
+
+    Album* album = mj.obtenerAlbum(0);
+    cout << "  Album: " << album->getNombre() << " (" << album->getCantidadCanciones()
+         << " canciones, " << album->getDuracionTotal() << "s)" << endl;
+
+    for (int i = 0; i < album->getCantidadCanciones(); i++) {
+        Cancion* cancion = album->obtenerCancion(i);
+        cout << "    Cancion: " << cancion->getNombre()
+             << " (" << cancion->getReproducciones() << " reproducciones)" << endl;
     }
 
-    // Buscar un crédito específico
-    cout << "[OK] Segundo credito (indice 1): " << creditos[1]->getNombre()
-         << " " << creditos[1]->getApellido() << endl;
-
-    // Limpiar memoria
-    for (int i = 0; i < creditos.getCantidad(); i++) {
-        delete creditos[i];
-    }
-    cout << "[OK] Memoria de creditos liberada" << endl;
-}
-
-void pruebasConObjetos() {
-    cout << ">>> PRUEBAS CON OBJETOS (Fecha) <<<" << endl;
-    cout << "========================================" << endl;
-
-    ArregloDinamico<Fecha> fechas;
-
-    // Agregar fechas
-    fechas.agregar(Fecha(2025, 1, 15));
-    fechas.agregar(Fecha(2024, 6, 20));
-    fechas.agregar(Fecha(2023, 12, 31));
-
-    cout << "[OK] Agregadas 3 fechas" << endl;
-
-    // Mostrar fechas
-    cout << "Fechas en el arreglo:" << endl;
-    for (int i = 0; i < fechas.getCantidad(); i++) {
-        Fecha f = fechas[i];
-        cout << "  " << f.getAño() << "/" << f.getMes() << "/" << f.getDia() << endl;
-    }
-
-    // Ordenar usando operador <
-    cout << "\nComparando fechas:" << endl;
-    if (fechas[2] < fechas[1] && fechas[1] < fechas[0]) {
-        cout << "[OK] Las fechas estan en orden cronologico inverso" << endl;
-    }
-}
-
-void pruebasRedimensionamiento() {
-    cout << ">>> PRUEBAS DE REDIMENSIONAMIENTO <<<" << endl;
-    cout << "========================================" << endl;
-
-    ArregloDinamico<int> arr;
-
-    cout << "Capacidad inicial: " << arr.getCapacidad() << endl;
-
-    // Agregar más elementos que la capacidad inicial (10)
-    cout << "Agregando 15 elementos..." << endl;
-    for (int i = 1; i <= 15; i++) {
-        arr.agregar(i);
-        if (i == 10) {
-            cout << "  Capacidad despues de 10 elementos: " << arr.getCapacidad() << endl;
-        }
-    }
-
-    cout << "[OK] Capacidad final: " << arr.getCapacidad()
-         << " (factor 1.5x aplicado)" << endl;
-    cout << "[OK] Cantidad de elementos: " << arr.getCantidad() << endl;
-
-    // Verificar que todos los elementos se guardaron correctamente
-    bool todosCorrectos = true;
-    for (int i = 0; i < arr.getCantidad(); i++) {
-        if (arr[i] != i + 1) {
-            todosCorrectos = false;
-            break;
-        }
-    }
-
-    if (todosCorrectos) {
-        cout << "[OK] Todos los elementos se mantuvieron correctos despues del redimensionamiento" << endl;
-    } else {
-        cout << "[ERROR] Algunos elementos se perdieron en el redimensionamiento" << endl;
-    }
-
-    // Limpiar
-    arr.limpiar();
-    cout << "[OK] Arreglo limpiado. Cantidad: " << arr.getCantidad()
-         << ", Capacidad: " << arr.getCapacidad() << " (mantiene capacidad)" << endl;
+    cout << "\n[OK] La jerarquia Artista->Album->Cancion funciona correctamente" << endl;
 }

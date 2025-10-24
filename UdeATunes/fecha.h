@@ -9,7 +9,7 @@ private:
     int dia;
 
 public:
-    Fecha();
+    //Fecha();
     // Constructor parametrizado
     Fecha(int año, int mes, int dia);
 
