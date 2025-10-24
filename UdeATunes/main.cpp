@@ -1,31 +1,35 @@
 #include <iostream>
-#include "Artista.h"
-#include "Album.h"
+#include "Usuario.h"
 #include "Cancion.h"
+#include "ListaFavoritos.h"
 #include "Fecha.h"
 
 using namespace std;
 
 void pruebasBasicas();
-void pruebasAlbumes();
+void pruebasMembresia();
+void pruebasHistorico();
+void pruebasFavoritos();
 void pruebasCopiaAsignacion();
-void pruebaCompleta();
 
 int main() {
     cout << "========================================" << endl;
-    cout << "   PRUEBAS DE LA CLASE ARTISTA" << endl;
+    cout << "   PRUEBAS DE LA CLASE USUARIO" << endl;
     cout << "========================================" << endl << endl;
 
     pruebasBasicas();
     cout << "\n\n";
 
-    pruebasAlbumes();
+    pruebasMembresia();
+    cout << "\n\n";
+
+    pruebasHistorico();
+    cout << "\n\n";
+
+    pruebasFavoritos();
     cout << "\n\n";
 
     pruebasCopiaAsignacion();
-    cout << "\n\n";
-
-    pruebaCompleta();
 
     cout << "\n========================================" << endl;
     cout << "   TODAS LAS PRUEBAS COMPLETADAS" << endl;
@@ -39,170 +43,222 @@ void pruebasBasicas() {
     cout << "========================================" << endl;
 
     // Constructor parametrizado
-    // ID: 12345 (5 dígitos según preinforme)
-    Artista mj(12345, 50, "Estados Unidos", 75000000, 1);
+    Fecha inscripcion(2024, 10, 20);
+    Usuario u1("musiclover_01", "premium", "Medellin", "Colombia", inscripcion);
 
     cout << "[OK] Constructor parametrizado" << endl;
-    cout << "ID: " << mj.getId() << endl;
-    cout << "Edad: " << mj.getEdad() << " anios" << endl;
-    cout << "Pais: " << mj.getPaisOrigen() << endl;
-    cout << "Seguidores: " << mj.getSeguidores() << endl;
-    cout << "Posicion en tendencias: #" << mj.getPosicionTendencias() << endl;
+    cout << "Nickname: " << u1.getNickname() << endl;
+    cout << "Membresia: " << u1.getTipoMembresia() << endl;
+    cout << "Ciudad: " << u1.getCiudad() << endl;
+    cout << "Pais: " << u1.getPais() << endl;
+    cout << "Fecha inscripcion: " << inscripcion.getDia() << "/"
+         << inscripcion.getMes() << "/" << inscripcion.getAño() << endl;
 
     // Operador ==
-    Artista mj2(12345, 40, "USA", 0, 0);
-    if (mj == mj2) {
-        cout << "[OK] Operador == funciona (mismo ID)" << endl;
+    Usuario u2("musiclover_01", "estandar", "Bogota", "Colombia", Fecha(2020, 1, 1));
+    if (u1 == u2) {
+        cout << "[OK] Operador == funciona (mismo nickname)" << endl;
     }
 
-    // Operador < (ordenar por seguidores descendente)
-    Artista artista1(10001, 30, "UK", 1000000, 5);
-    Artista artista2(10002, 25, "Spain", 5000000, 2);
-
-    if (artista2 < artista1) {
-        cout << "[OK] Operador < funciona (5M seguidores > 1M seguidores)" << endl;
+    // Operador <
+    Usuario alice("alice", "premium", "NYC", "USA", Fecha(2024, 1, 1));
+    Usuario bob("bob", "premium", "LA", "USA", Fecha(2024, 1, 1));
+    if (alice < bob) {
+        cout << "[OK] Operador < funciona (orden alfabetico: alice < bob)" << endl;
     }
 }
 
-void pruebasAlbumes() {
-    cout << ">>> PRUEBAS DE ALBUMES <<<" << endl;
+void pruebasMembresia() {
+    cout << ">>> PRUEBAS DE MEMBRESIA <<<" << endl;
     cout << "========================================" << endl;
 
-    Artista mj(12345, 50, "Estados Unidos", 75000000, 1);
+    // Usuario estándar
+    Usuario estandar("user_estandar", "estandar", "Medellin", "Colombia", Fecha(2024, 10, 20));
 
-    cout << "Creando albumes para el artista..." << endl;
-
-    // Crear álbumes
-    Album* thriller = new Album(12345, 1, "Thriller", Fecha(1982, 11, 30),
-                                "Epic Records", "/portadas/thriller.jpg", 9.8);
-
-    Album* bad = new Album(12345, 2, "Bad", Fecha(1987, 8, 31),
-                           "Epic Records", "/portadas/bad.jpg", 9.5);
-
-    Album* dangerous = new Album(12345, 3, "Dangerous", Fecha(1991, 11, 26),
-                                 "Epic Records", "/portadas/dangerous.jpg", 9.3);
-
-    mj.agregarAlbum(thriller);
-    mj.agregarAlbum(bad);
-    mj.agregarAlbum(dangerous);
-
-    cout << "[OK] Agregados " << mj.getCantidadAlbumes() << " albumes" << endl;
-
-    // Mostrar álbumes
-    cout << "\nDiscografia:" << endl;
-    for (int i = 0; i < mj.getCantidadAlbumes(); i++) {
-        Album* album = mj.obtenerAlbum(i);
-        Fecha fecha = album->getFechaLanzamiento();
-        cout << "  " << (i+1) << ". " << album->getNombre()
-             << " (" << fecha.getAño() << ") - "
-             << album->getPuntuacion() << "/10" << endl;
+    if (estandar.esEstandar()) {
+        cout << "[OK] Usuario estandar detectado correctamente" << endl;
     }
 
-    // Acceder a un álbum específico
-    Album* primerAlbum = mj.obtenerAlbum(0);
-    if (primerAlbum != nullptr) {
-        cout << "\n[OK] Primer album: " << primerAlbum->getNombre() << endl;
+    if (!estandar.esPremium()) {
+        cout << "[OK] Usuario NO es premium" << endl;
     }
 
-    // NOTA: Los álbumes serán liberados automáticamente por el destructor de Artista
+    if (!estandar.tieneListaFavoritos()) {
+        cout << "[OK] Usuario estandar NO tiene lista de favoritos" << endl;
+    }
+
+    // Usuario premium
+    Usuario premium("user_premium", "premium", "Bogota", "Colombia", Fecha(2024, 10, 20));
+
+    if (premium.esPremium()) {
+        cout << "\n[OK] Usuario premium detectado correctamente" << endl;
+    }
+
+    if (premium.tieneListaFavoritos()) {
+        cout << "[OK] Usuario premium TIENE lista de favoritos (creada automaticamente)" << endl;
+    }
+
+    // Cambiar de estándar a premium
+    cout << "\nCambiando usuario estandar a premium..." << endl;
+    estandar.setTipoMembresia("premium");
+
+    if (estandar.esPremium() && estandar.tieneListaFavoritos()) {
+        cout << "[OK] Cambio exitoso: ahora es premium con lista de favoritos" << endl;
+    }
+
+    // Cambiar de premium a estándar
+    cout << "\nCambiando usuario premium a estandar..." << endl;
+    premium.setTipoMembresia("estandar");
+
+    if (premium.esEstandar() && !premium.tieneListaFavoritos()) {
+        cout << "[OK] Cambio exitoso: ahora es estandar sin lista de favoritos" << endl;
+    }
+}
+
+void pruebasHistorico() {
+    cout << ">>> PRUEBAS DE HISTORICO (max 6 canciones) <<<" << endl;
+    cout << "========================================" << endl;
+
+    Usuario usuario("testuser", "estandar", "Medellin", "Colombia", Fecha(2024, 10, 20));
+
+    // Crear canciones de prueba
+    Cancion* c1 = new Cancion(100000001, "Cancion 1", 200, "", "");
+    Cancion* c2 = new Cancion(100000002, "Cancion 2", 200, "", "");
+    Cancion* c3 = new Cancion(100000003, "Cancion 3", 200, "", "");
+    Cancion* c4 = new Cancion(100000004, "Cancion 4", 200, "", "");
+    Cancion* c5 = new Cancion(100000005, "Cancion 5", 200, "", "");
+    Cancion* c6 = new Cancion(100000006, "Cancion 6", 200, "", "");
+    Cancion* c7 = new Cancion(100000007, "Cancion 7", 200, "", "");
+
+    cout << "Agregando canciones al historico..." << endl;
+    usuario.agregarAlHistorico(c1);
+    usuario.agregarAlHistorico(c2);
+    usuario.agregarAlHistorico(c3);
+    usuario.agregarAlHistorico(c4);
+    usuario.agregarAlHistorico(c5);
+    usuario.agregarAlHistorico(c6);
+
+    cout << "[OK] Agregadas 6 canciones. Historico: " << usuario.getCantidadHistorico() << "/6" << endl;
+
+    // Mostrar historial
+    cout << "\nHistorico actual:" << endl;
+    for (int i = 0; i < usuario.getCantidadHistorico(); i++) {
+        Cancion* c = usuario.obtenerDelHistorico(i);
+        cout << "  " << (i+1) << ". " << c->getNombre() << " (ID: " << c->getId() << ")" << endl;
+    }
+
+    // Agregar una más (debe eliminar la primera)
+    cout << "\nAgregando cancion 7 (debe eliminar la cancion 1)..." << endl;
+    usuario.agregarAlHistorico(c7);
+
+    cout << "[OK] Cantidad sigue siendo: " << usuario.getCantidadHistorico() << "/6" << endl;
+
+    cout << "\nNuevo historico:" << endl;
+    for (int i = 0; i < usuario.getCantidadHistorico(); i++) {
+        Cancion* c = usuario.obtenerDelHistorico(i);
+        cout << "  " << (i+1) << ". " << c->getNombre() << " (ID: " << c->getId() << ")" << endl;
+    }
+
+    // Verificar que la primera se eliminó
+    Cancion* primera = usuario.obtenerDelHistorico(0);
+    if (primera->getId() == 100000002) {
+        cout << "\n[OK] La cancion 1 fue eliminada correctamente (FIFO)" << endl;
+    }
+
+    // Limpiar memoria
+    delete c1; delete c2; delete c3; delete c4;
+    delete c5; delete c6; delete c7;
+}
+
+void pruebasFavoritos() {
+    cout << ">>> PRUEBAS DE FAVORITOS (solo premium) <<<" << endl;
+    cout << "========================================" << endl;
+
+    Usuario premium("user_premium", "premium", "Medellin", "Colombia", Fecha(2024, 10, 20));
+
+    // Obtener lista de favoritos
+    ListaFavoritos* lista = premium.getListaFavoritos();
+
+    if (lista != nullptr) {
+        cout << "[OK] Usuario premium tiene lista de favoritos" << endl;
+        cout << "Dueño de la lista: " << lista->getUsuarioDueño() << endl;
+    }
+
+    // Agregar canciones a favoritos
+    Cancion* c1 = new Cancion(123450103, "Thriller", 357, "", "");
+    Cancion* c2 = new Cancion(123450104, "Beat It", 258, "", "");
+
+    lista->agregar(c1);
+    lista->agregar(c2);
+
+    cout << "[OK] Agregadas " << lista->getCantidad() << " canciones a favoritos" << endl;
+
+    // Mostrar favoritos
+    cout << "\nCanciones favoritas:" << endl;
+    for (int i = 0; i < lista->getCantidad(); i++) {
+        Cancion* c = lista->obtenerCancion(i);
+        cout << "  " << (i+1) << ". " << c->getNombre() << endl;
+    }
+
+    // Usuario estándar no puede tener favoritos
+    Usuario estandar("user_estandar", "estandar", "Bogota", "Colombia", Fecha(2024, 10, 20));
+
+    if (estandar.getListaFavoritos() == nullptr) {
+        cout << "\n[OK] Usuario estandar NO puede tener lista de favoritos" << endl;
+    }
+
+    // Limpiar
+    delete c1;
+    delete c2;
 }
 
 void pruebasCopiaAsignacion() {
     cout << ">>> PRUEBAS DE COPIA Y ASIGNACION <<<" << endl;
     cout << "========================================" << endl;
 
-    // Crear artista original con álbumes
-    Artista original(12345, 50, "Estados Unidos", 75000000, 1);
+    // Crear usuario original premium con datos
+    Usuario original("original_user", "premium", "Medellin", "Colombia", Fecha(2024, 10, 20));
 
-    Album* album1 = new Album(12345, 1, "Thriller", Fecha(1982, 11, 30),
-                              "Epic Records", "/portadas/thriller.jpg", 9.8);
-    Album* album2 = new Album(12345, 2, "Bad", Fecha(1987, 8, 31),
-                              "Epic Records", "/portadas/bad.jpg", 9.5);
+    Cancion* c1 = new Cancion(123450103, "Thriller", 357, "", "");
+    Cancion* c2 = new Cancion(123450104, "Beat It", 258, "", "");
 
-    original.agregarAlbum(album1);
-    original.agregarAlbum(album2);
+    original.agregarAlHistorico(c1);
+    original.agregarAlHistorico(c2);
 
-    cout << "Artista original:" << endl;
-    cout << "  ID: " << original.getId() << endl;
-    cout << "  Seguidores: " << original.getSeguidores() << endl;
-    cout << "  Albumes: " << original.getCantidadAlbumes() << endl;
+    ListaFavoritos* listaOriginal = original.getListaFavoritos();
+    listaOriginal->agregar(c1);
+
+    cout << "Usuario original:" << endl;
+    cout << "  Nickname: " << original.getNickname() << endl;
+    cout << "  Membresia: " << original.getTipoMembresia() << endl;
+    cout << "  Historico: " << original.getCantidadHistorico() << " canciones" << endl;
+    cout << "  Favoritos: " << listaOriginal->getCantidad() << " canciones" << endl;
 
     // Constructor de copia
     cout << "\nProbando constructor de copia..." << endl;
-    Artista copia(original);
+    Usuario copia(original);
 
-    cout << "[OK] Artista copiado:" << endl;
-    cout << "  ID: " << copia.getId() << endl;
-    cout << "  Seguidores: " << copia.getSeguidores() << endl;
-    cout << "  Albumes: " << copia.getCantidadAlbumes() << endl;
+    cout << "[OK] Usuario copiado:" << endl;
+    cout << "  Nickname: " << copia.getNickname() << endl;
+    cout << "  Membresia: " << copia.getTipoMembresia() << endl;
+    cout << "  Historico: " << copia.getCantidadHistorico() << " canciones" << endl;
 
-    // Verificar que son copias independientes
-    copia.setSeguidores(100000000);
-
-    cout << "\nDespues de modificar seguidores en la copia:" << endl;
-    cout << "  Original: " << original.getSeguidores() << " seguidores" << endl;
-    cout << "  Copia: " << copia.getSeguidores() << " seguidores" << endl;
-
-    if (original.getSeguidores() != copia.getSeguidores()) {
-        cout << "[OK] Son copias independientes (copia profunda)" << endl;
+    if (copia.tieneListaFavoritos()) {
+        cout << "  Favoritos: " << copia.getListaFavoritos()->getCantidad() << " canciones" << endl;
     }
 
     // Operador de asignación
     cout << "\nProbando operador de asignacion..." << endl;
-    Artista asignado(99999, 25, "Unknown", 0, 0);
+    Usuario asignado("temp_user", "estandar", "Cali", "Colombia", Fecha(2020, 1, 1));
     asignado = original;
 
-    cout << "[OK] Artista asignado:" << endl;
-    cout << "  ID: " << asignado.getId() << endl;
-    cout << "  Albumes: " << asignado.getCantidadAlbumes() << endl;
+    cout << "[OK] Usuario asignado:" << endl;
+    cout << "  Nickname: " << asignado.getNickname() << endl;
+    cout << "  Membresia: " << asignado.getTipoMembresia() << endl;
 
     cout << "\n[OK] Constructor de copia y operador = funcionan correctamente" << endl;
-}
 
-void pruebaCompleta() {
-    cout << ">>> PRUEBA COMPLETA (Artista -> Album -> Cancion) <<<" << endl;
-    cout << "========================================" << endl;
-
-    // Crear artista
-    Artista mj(12345, 50, "Estados Unidos", 75000000, 1);
-    cout << "Artista: Michael Jackson" << endl;
-    cout << "ID: " << mj.getId() << endl;
-
-    // Crear álbum
-    Album* thriller = new Album(12345, 1, "Thriller", Fecha(1982, 11, 30),
-                                "Epic Records", "/portadas/thriller.jpg", 9.8);
-    thriller->agregarGenero("Pop");
-    thriller->agregarGenero("R&B");
-
-    // Crear canciones
-    Cancion* c1 = new Cancion(123450103, "Thriller", 357,
-                              "/audio/thriller_128.mp3", "/audio/thriller_320.mp3");
-    Cancion* c2 = new Cancion(123450104, "Beat It", 258,
-                              "/audio/beat_it_128.mp3", "/audio/beat_it_320.mp3");
-
-    c1->incrementarReproducciones();
-    c1->incrementarReproducciones();
-    c1->incrementarReproducciones();
-
-    thriller->agregarCancion(c1);
-    thriller->agregarCancion(c2);
-    thriller->calcularDuracionTotal();
-
-    // Agregar álbum al artista
-    mj.agregarAlbum(thriller);
-
-    cout << "\n[OK] Jerarquia completa creada:" << endl;
-    cout << "Artista: " << mj.getId() << " - " << mj.getSeguidores() << " seguidores" << endl;
-
-    Album* album = mj.obtenerAlbum(0);
-    cout << "  Album: " << album->getNombre() << " (" << album->getCantidadCanciones()
-         << " canciones, " << album->getDuracionTotal() << "s)" << endl;
-
-    for (int i = 0; i < album->getCantidadCanciones(); i++) {
-        Cancion* cancion = album->obtenerCancion(i);
-        cout << "    Cancion: " << cancion->getNombre()
-             << " (" << cancion->getReproducciones() << " reproducciones)" << endl;
-    }
-
-    cout << "\n[OK] La jerarquia Artista->Album->Cancion funciona correctamente" << endl;
+    // Limpiar
+    delete c1;
+    delete c2;
 }
