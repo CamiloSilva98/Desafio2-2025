@@ -1,7 +1,8 @@
 #include "Usuario.h"
 
 // Constructor por defecto
-Usuario::Usuario() : fechaInscripcion(2000, 1, 1) {
+Usuario::Usuario() : fechaInscripcion(2000, 1, 1)
+{
     nickname = "";
     tipoMembresia = "estandar";
     ciudad = "";
@@ -11,7 +12,8 @@ Usuario::Usuario() : fechaInscripcion(2000, 1, 1) {
 
 // Constructor parametrizado
 Usuario::Usuario(string nickname, string tipoMembresia, string ciudad, string pais, Fecha fechaInscripcion)
-    : fechaInscripcion(fechaInscripcion) {
+    : fechaInscripcion(fechaInscripcion)
+{
     this->nickname = nickname;
     this->tipoMembresia = tipoMembresia;
     this->ciudad = ciudad;
@@ -19,35 +21,43 @@ Usuario::Usuario(string nickname, string tipoMembresia, string ciudad, string pa
     this->listaFavoritos = nullptr;
 
     // Si es premium, crear lista de favoritos automáticamente
-    if (tipoMembresia == "premium") {
+    if (tipoMembresia == "premium")
+    {
         crearListaFavoritos();
     }
 }
 
 // Constructor de copia
-Usuario::Usuario(const Usuario& otro) : fechaInscripcion(otro.fechaInscripcion) {
+Usuario::Usuario(const Usuario& otro) : fechaInscripcion(otro.fechaInscripcion)
+{
     nickname = otro.nickname;
     tipoMembresia = otro.tipoMembresia;
     ciudad = otro.ciudad;
     pais = otro.pais;
 
     // Copiar lista de favoritos si existe
-    if (otro.listaFavoritos != nullptr) {
+    if (otro.listaFavoritos != nullptr)
+    {
         listaFavoritos = new ListaFavoritos(*otro.listaFavoritos);
-    } else {
+    }
+    else
+    {
         listaFavoritos = nullptr;
     }
 
     // Copiar historial (solo referencias, no copia profunda)
-    for (int i = 0; i < otro.historicoReproduccion.getCantidad(); i++) {
+    for (int i = 0; i < otro.historicoReproduccion.getCantidad(); i++)
+    {
         historicoReproduccion.agregar(otro.historicoReproduccion.obtener(i));
     }
 }
 
 // Destructor
-Usuario::~Usuario() {
+Usuario::~Usuario()
+{
     // Liberar lista de favoritos si existe
-    if (listaFavoritos != nullptr) {
+    if (listaFavoritos != nullptr)
+    {
         delete listaFavoritos;
     }
 
@@ -55,12 +65,14 @@ Usuario::~Usuario() {
 }
 
 // Operador de igualdad (compara por nickname)
-bool Usuario::operator==(const Usuario& otro) const {
+bool Usuario::operator==(const Usuario& otro) const
+{
     return nickname == otro.nickname;
 }
 
 // Operador menor que (ordenar por nickname alfabéticamente)
-bool Usuario::operator<(const Usuario& otro) const {
+bool Usuario::operator<(const Usuario& otro) const
+{
     return nickname < otro.nickname;
 }
 
@@ -240,7 +252,8 @@ void Usuario::setCiudad(string ciudad)
 
 void Usuario::setPais(string pais)
 {
-    if (!pais.empty()) {
+    if (!pais.empty())
+    {
         this->pais = pais;
     }
 }
