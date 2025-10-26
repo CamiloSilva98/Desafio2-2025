@@ -15,6 +15,7 @@ SOURCES += \
         listafavoritos.cpp \
         main.cpp \
         publicidad.cpp \
+        reproductor.cpp \
         usuario.cpp
 
 # Default rules for deployment.
@@ -31,4 +32,5 @@ HEADERS += \
     fecha.h \
     listafavoritos.h \
     publicidad.h \
+    reproductor.h \
     usuario.h
