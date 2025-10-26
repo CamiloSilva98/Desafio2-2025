@@ -1,5 +1,5 @@
-#include "Reproductor.h"
-#include "Medidor.h"
+#include "reproductor.h"
+#include "medidor.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -119,6 +119,10 @@ Album* Reproductor::obtenerAlbumDeCancion(Cancion* cancion) const {
     return nullptr;
 }
 
+/**
+ * Muestra publicidad (simulación)
+ * TODO: Integrar con la clase Publicidad que desarrolla el compañero
+ */
 void Reproductor::mostrarPublicidad() {
     cout << "\n╔════════════════════════════════════════════════════════════╗" << endl;
     cout << "║                    🎵 PUBLICIDAD 🎵                        ║" << endl;
@@ -234,10 +238,10 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
         }
 
         cout << "├────────────────────────────────────────────────────────────┤" << endl;
-        cout << "│     RUTA DEL ARCHIVO DE AUDIO:" << endl;
+        cout << "│ 📁 RUTA DEL ARCHIVO DE AUDIO:" << endl;
         cout << "│ " << rutaAudio << endl;
         cout << "├────────────────────────────────────────────────────────────┤" << endl;
-        cout << "│     RUTA DE LA PORTADA DEL ÁLBUM:" << endl;
+        cout << "│ 🖼  RUTA DE LA PORTADA DEL ÁLBUM:" << endl;
 
         if (album != nullptr) {
             cout << "│ " << album->getRutaPortada() << endl;
@@ -284,7 +288,7 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
 
 /**
  * Inicia reproducción manual (sin temporizador automático)
- * Para usar con los controles: siguiente, anterior
+ * Para usar con los controles: siguiente, anterior, repetir, detener
  */
 void Reproductor::iniciarReproduccionManual() {
     if (todasLasCanciones.getCantidad() == 0) {
@@ -362,6 +366,12 @@ void Reproductor::siguiente() {
         cout << "[Error] No hay reproducción activa. Usa 'Iniciar reproducción manual' primero." << endl;
         return;
     }
+
+    if (modoRepetir) {
+        cout << "[Info] Modo repetir activado. Desactívalo para avanzar." << endl;
+        return;
+    }
+
     if (!puedeAvanzar()) {
         cout << "[Info] No hay más canciones en la cola." << endl;
         detenerReproduccion();
@@ -410,6 +420,29 @@ void Reproductor::anterior() {
 
     indiceActual--;
     mostrarCancionActual();
+}
+
+/**
+ * Activa/desactiva el modo repetir (solo premium)
+ */
+void Reproductor::toggleRepetir() {
+    if (!reproduciendo) {
+        cout << "[Error] No hay reproducción activa." << endl;
+        return;
+    }
+
+    if (usuarioActual->esEstandar()) {
+        cout << "[Error] Usuarios estándar no tienen modo repetir. ¡Actualiza a Premium!" << endl;
+        return;
+    }
+
+    modoRepetir = !modoRepetir;
+
+    if (modoRepetir) {
+        cout << "\n[Reproductor] 🔁 Modo REPETIR activado" << endl;
+    } else {
+        cout << "\n[Reproductor] ⏭  Modo REPETIR desactivado" << endl;
+    }
 }
 
 // ============================
@@ -604,12 +637,12 @@ void Reproductor::mostrarCancionActual() const {
     }
 
     cout << "├──────────────────────────────────────────────────┤" << endl;
-    cout << "│    Ruta de audio:" << endl;
+    cout << "│ 📁 Ruta de audio:" << endl;
     cout << "│ " << rutaAudio << endl;
 
     if (album != nullptr) {
         cout << "├──────────────────────────────────────────────────┤" << endl;
-        cout << "│     Portada del álbum:" << endl;
+        cout << "│ 🖼  Portada del álbum:" << endl;
         cout << "│ " << album->getRutaPortada() << endl;
     }
 
@@ -617,7 +650,7 @@ void Reproductor::mostrarCancionActual() const {
     cout << "│ Posición: " << (indiceActual + 1) << "/" << colaReproduccion.getCantidad() << endl;
 
     if (modoRepetir) {
-        cout << "│ Estado:  MODO REPETIR ACTIVADO" << endl;
+        cout << "│ Estado: 🔁 MODO REPETIR ACTIVADO" << endl;
     }
 
     cout << "└──────────────────────────────────────────────────┘" << endl;
