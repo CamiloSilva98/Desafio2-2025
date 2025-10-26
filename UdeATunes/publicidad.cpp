@@ -28,7 +28,12 @@ Publicidad::Publicidad(const Publicidad& otra)
 }
 
 // Destructor
+<<<<<<< HEAD
 Publicidad::~Publicidad() {
+=======
+Publicidad::~Publicidad()
+{
+>>>>>>> 31735ecec46d58924faddd7107869c9db2261d75
     // No hay memoria dinámica que liberar
 }
 
@@ -50,8 +55,12 @@ bool Publicidad::operator<(const Publicidad& otra) const
 // Operador de asignación
 Publicidad& Publicidad::operator=(const Publicidad& otra)
 {
+<<<<<<< HEAD
     if (this != &otra)
     {
+=======
+    if (this != &otra) {
+>>>>>>> 31735ecec46d58924faddd7107869c9db2261d75
         id = otra.id;
         mensaje = otra.mensaje;
         categoria = otra.categoria;
@@ -64,8 +73,12 @@ Publicidad& Publicidad::operator=(const Publicidad& otra)
 int Publicidad::calcularPeso() const
 {
     // Según preinforme: C=1, B=2, AAA=3
+<<<<<<< HEAD
     switch (categoria)
     {
+=======
+    switch (categoria) {
+>>>>>>> 31735ecec46d58924faddd7107869c9db2261d75
     case 'C':
         return 1;
     case 'B':
@@ -101,14 +114,24 @@ int Publicidad::getUltimaVezMostrada() const
 // Setters con validación
 void Publicidad::setId(int id)
 {
+<<<<<<< HEAD
     if (id > 0) {
+=======
+    if (id > 0)
+    {
+>>>>>>> 31735ecec46d58924faddd7107869c9db2261d75
         this->id = id;
     }
 }
 
 void Publicidad::setMensaje(string mensaje)
 {
+<<<<<<< HEAD
     if (!mensaje.empty()) {
+=======
+    if (!mensaje.empty())
+    {
+>>>>>>> 31735ecec46d58924faddd7107869c9db2261d75
         this->mensaje = mensaje;
     }
 }
