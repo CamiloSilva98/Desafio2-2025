@@ -31,6 +31,7 @@ HEADERS += \
     credito.h \
     fecha.h \
     listafavoritos.h \
+    medidor.h \
     publicidad.h \
     reproductor.h \
     usuario.h
