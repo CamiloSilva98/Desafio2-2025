@@ -24,7 +24,7 @@ using namespace std;
  * - Termina automáticamente después de 5 canciones
  *
  * CONTROLES MANUALES (solo fuera del temporizador):
- * - siguiente, anterior  (según tipo de usuario)
+ * - siguiente, anterior, repetir (según tipo de usuario)
  */
 class Reproductor {
 private:
@@ -78,7 +78,12 @@ public:
 
     // ====== CONTROLES MANUALES (solo fuera del temporizador) ======
     void iniciarReproduccionManual();  // Inicia reproducción manual (sin temporizador)
-    void detenerReproduccion();
+    void detenerReproduccion();        // Detiene la reproducción
+
+    // ====== CONTROLES DE NAVEGACIÓN ======
+    void siguiente();                  // Avanzar a la siguiente canción
+    void anterior();                   // Retroceder a la anterior (solo premium)
+    void toggleRepetir();              // Activar/desactivar modo repetir (solo premium)
 
     // ====== FUNCIONALIDAD IV: REPRODUCIR LISTA DE FAVORITOS ======
     void reproducirFavoritos(bool modoAleatorio);
