@@ -12,8 +12,11 @@ SOURCES += \
         cancion.cpp \
         credito.cpp \
         fecha.cpp \
+        gestordatos.cpp \
+        interfaz.cpp \
         listafavoritos.cpp \
         main.cpp \
+        plataforma.cpp \
         publicidad.cpp \
         reproductor.cpp \
         usuario.cpp
@@ -30,8 +33,11 @@ HEADERS += \
     cancion.h \
     credito.h \
     fecha.h \
+    gestordatos.h \
+    interfaz.h \
     listafavoritos.h \
     medidor.h \
+    plataforma.h \
     publicidad.h \
     reproductor.h \
     usuario.h
