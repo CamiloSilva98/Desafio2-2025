@@ -4,52 +4,78 @@
 #include <iostream>
 using namespace std;
 
+/**
+ * Clase estática para medir eficiencia del sistema
+ * - Cuenta iteraciones en bucles
+ * - Suma memoria consumida por objetos
+ * - Muestra métricas al finalizar funcionalidades
+ */
 class Medidor {
 private:
-    inline static long long iteracionesTotales = 0;
-    inline static long long memoriaTotal = 0;
+    static long long iteracionesTotales;
+    static long long memoriaTotal;
 
 public:
-    static void incrementarIteraciones(long long cantidad = 1) {
+    // Incrementar contador de iteraciones
+    static void incrementarIteraciones(long long cantidad = 1)
+    {
         iteracionesTotales += cantidad;
     }
 
-    static void sumarMemoria(long long bytes) {
+    // Registrar memoria asignada
+    static void sumarMemoria(long long bytes)
+    {
         memoriaTotal += bytes;
     }
 
-    static void restarMemoria(long long bytes) {
+    // Registrar memoria liberada
+    static void restarMemoria(long long bytes)
+    {
         memoriaTotal -= bytes;
-        if (memoriaTotal < 0) {
-            memoriaTotal = 0;
+        if (memoriaTotal < 0)
+        {
+            memoriaTotal = 0;  // Protección
         }
     }
 
-    static long long obtenerIteraciones() {
+    // Obtener total de iteraciones
+    static long long obtenerIteraciones()
+    {
         return iteracionesTotales;
     }
 
-    static long long obtenerMemoria() {
+    // Obtener total de memoria
+    static long long obtenerMemoria()
+    {
         return memoriaTotal;
     }
 
-    static void resetear() {
+    // Resetear métricas de iteraciones (usar al inicio de cada funcionalidad)
+    static void resetear()
+    {
         iteracionesTotales = 0;
+        // NO resetear memoria, es acumulativa del sistema
     }
 
-    static void mostrarMetricas() {
+    // Mostrar métricas formateadas
+    static void mostrarMetricas()
+    {
         cout << "\n========================================" << endl;
         cout << "       METRICAS DE EFICIENCIA" << endl;
         cout << "========================================" << endl;
         cout << "Iteraciones ejecutadas: " << iteracionesTotales << endl;
         cout << "Memoria consumida: " << memoriaTotal << " bytes";
 
-        if (memoriaTotal >= 1024) {
+        // Mostrar en KB si es grande
+        if (memoriaTotal >= 1024)
+        {
             double kb = memoriaTotal / 1024.0;
             cout << " (" << kb << " KB)";
         }
 
-        if (memoriaTotal >= 1048576) {
+        // Mostrar en MB si es muy grande
+        if (memoriaTotal >= 1048576)
+        {
             double mb = memoriaTotal / 1048576.0;
             cout << " (" << mb << " MB)";
         }
@@ -58,5 +84,9 @@ public:
         cout << "========================================\n" << endl;
     }
 };
+
+// Inicialización de variables estáticas
+long long Medidor::iteracionesTotales = 0;
+long long Medidor::memoriaTotal = 0;
 
 #endif // MEDIDOR_H
