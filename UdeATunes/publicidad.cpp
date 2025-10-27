@@ -28,7 +28,9 @@ Publicidad::Publicidad(const Publicidad& otra)
 }
 
 // Destructor
-Publicidad::~Publicidad() {
+
+Publicidad::~Publicidad()
+{
     // No hay memoria dinámica que liberar
 }
 
@@ -101,14 +103,16 @@ int Publicidad::getUltimaVezMostrada() const
 // Setters con validación
 void Publicidad::setId(int id)
 {
-    if (id > 0) {
+    if (id > 0)
+    {
         this->id = id;
     }
 }
 
 void Publicidad::setMensaje(string mensaje)
 {
-    if (!mensaje.empty()) {
+    if (!mensaje.empty())
+    {
         this->mensaje = mensaje;
     }
 }
