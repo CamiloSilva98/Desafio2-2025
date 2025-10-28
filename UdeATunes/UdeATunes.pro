@@ -41,3 +41,12 @@ HEADERS += \
     publicidad.h \
     reproductor.h \
     usuario.h
+
+DISTFILES += \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/albumes.txt \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/artistas.txt \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/canciones.txt \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/creditos.txt \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/favoritos.txt \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/publicidad.txt \
+    build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/Data/usuarios.txt
