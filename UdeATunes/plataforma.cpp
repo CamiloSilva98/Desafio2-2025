@@ -97,19 +97,19 @@ void Plataforma::cerrarSesion() {
     usuarioActivo = nullptr;
     sesionActiva = false;
 
-    cout << "\n[Sistema] Sesión cerrada correctamente." << endl;
+    cout << "\n[Sistema] Sesion cerrada correctamente." << endl;
 }
 
 // Mostrar bienvenida personalizada
 void Plataforma::mostrarBienvenida() {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║              ¡BIENVENIDO A UDEATUNES!                  ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|              ¡BIENVENIDO A UDEATUNES!                  |" << endl;
+    cout << "|----------------------------------------------|" << endl;
 
     cout << "\n Usuario: " << usuarioActivo->getNickname() << endl;
-    cout << " Ubicación: " << usuarioActivo->getCiudad() << ", "
+    cout << " Ubicacion: " << usuarioActivo->getCiudad() << ", "
          << usuarioActivo->getPais() << endl;
-    cout << "️  Membresía: " << usuarioActivo->getTipoMembresia() << endl;
+    cout << "️  Membresia: " << usuarioActivo->getTipoMembresia() << endl;
 
     if (usuarioActivo->esPremium()) {
         cout << "\n Disfruta de tus beneficios premium:" << endl;
@@ -129,12 +129,12 @@ void Plataforma::mostrarBienvenida() {
 
 // Mostrar despedida
 void Plataforma::mostrarDespedida() {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║             ¡GRACIAS POR USAR UDEATUNES!               ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|          ¡GRACIAS POR USAR UDEATUNES!            |" << endl;
+    cout << "|----------------------------------------------|" << endl;
 
-    cout << "\n🎵 Nos vemos pronto, " << usuarioActivo->getNickname() << "!" << endl;
-    cout << "   Tu música te espera.\n" << endl;
+    cout << "\n Nos vemos pronto, " << usuarioActivo->getNickname() << "!" << endl;
+    cout << "   Tu musica te espera.\n" << endl;
 }
 
 // MENÚ USUARIO ESTÁNDAR
@@ -142,18 +142,18 @@ void Plataforma::menuUsuarioEstandar() {
     bool enMenu = true;
 
     while (enMenu && sesionActiva) {
-        cout << "\n──────────────────────────────────────────────────────" << endl;
-        cout << "  MENÚ PRINCIPAL - Usuario Estándar" << endl;
-        cout << "──────────────────────────────────────────────────────" << endl;
-        cout << "1. Reproducción aleatoria (modo automático)" << endl;
-        cout << "2. Reproducción manual con controles" << endl;
-        cout << "3. Ver historial de reproducción" << endl;
-        cout << "4. Buscar canción" << endl;
-        cout << "5. Cerrar sesión" << endl;
-        cout << "──────────────────────────────────────────────────────" << endl;
+        cout << "\n|----------------------------------------------|" << endl;
+        cout << "    MENU PRINCIPAL - Usuario Estandar"   << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "1. Reproduccion aleatoria (modo automatico)" << endl;
+        cout << "2. Reproduccion manual con controles" << endl;
+        cout << "3. Ver historial de reproduccion" << endl;
+        cout << "4. Buscar cancion" << endl;
+        cout << "5. Cerrar sesion" << endl;
+        cout << "|----------------------------------------------|" << endl;
 
         int opcion;
-        cout << "\n> Opción: ";
+        cout << "\n> Opcion: ";
         cin >> opcion;
         limpiarBuffer();
 
@@ -187,7 +187,7 @@ void Plataforma::menuUsuarioEstandar() {
             break;
 
         default:
-            cout << "[Error] Opción inválida." << endl;
+            cout << "[Error] Opcion invalida." << endl;
             break;
         }
     }
@@ -198,21 +198,21 @@ void Plataforma::menuUsuarioPremium() {
     bool enMenu = true;
 
     while (enMenu && sesionActiva) {
-        cout << "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" << endl;
-        cout << "   MENÚ PREMIUM " << endl;
-        cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" << endl;
-        cout << "1. Reproducción aleatoria (modo automático)" << endl;
-        cout << "2. Reproducción manual con controles avanzados" << endl;
-        cout << "3. Ver historial de reproducción" << endl;
-        cout << "4. Buscar canción" << endl;
+        cout << "\n|----------------------------------------------|" << endl;
+        cout << "      MENU PREMIUM    " << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "1. Reproduccion aleatoria (modo automatico)" << endl;
+        cout << "2. Reproduccion manual con controles avanzados" << endl;
+        cout << "3. Ver historial de reproduccion" << endl;
+        cout << "4. Buscar cancion" << endl;
         cout << "5. Gestionar lista de favoritos" << endl;
         cout << "6. Reproducir favoritos" << endl;
         cout << "7. Seguir lista de otro usuario" << endl;
-        cout << "8. Cerrar sesión" << endl;
-        cout << "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" << endl;
+        cout << "8. Cerrar sesion" << endl;
+        cout << "|----------------------------------------------|" << endl;
 
         int opcion;
-        cout << "\n> Opción: ";
+        cout << "\n> Opcion: ";
         cin >> opcion;
         limpiarBuffer();
 
@@ -261,7 +261,7 @@ void Plataforma::menuUsuarioPremium() {
             break;
 
         default:
-            cout << "[Error] Opción inválida." << endl;
+            cout << "[Error] Opcion invalida." << endl;
             break;
         }
     }
@@ -269,26 +269,26 @@ void Plataforma::menuUsuarioPremium() {
 
 // Reproducción aleatoria automática
 void Plataforma::reproduccionAleatoria() {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║          REPRODUCCIÓN ALEATORIA AUTOMÁTICA             ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|     REPRODUCCION ALEATORIA AUTOMATICA        |" << endl;
+    cout << "|----------------------------------------------|" << endl;
 
     reproductor->reproduccionAleatoriaTemporizador();
 }
 
 // Reproducción manual con controles
 void Plataforma::reproduccionManual() {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║            REPRODUCCIÓN MANUAL CON CONTROLES           ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|       REPRODUCCION MANUAL CON CONTROLES      |" << endl;
+    cout << "|----------------------------------------------|" << endl;
 
     reproductor->iniciarReproduccionManual();
 
     bool reproduciendo = true;
     while (reproduciendo && reproductor->estaReproduciendo()) {
-        cout << "\n──────────────────────────────────────────────────────" << endl;
+        cout << "\n|----------------------------------------------|" << endl;
         cout << "  CONTROLES" << endl;
-        cout << "──────────────────────────────────────────────────────" << endl;
+        cout << "|----------------------------------------------|" << endl;
         cout << "1. ️  Siguiente" << endl;
 
         if (usuarioActivo->esPremium()) {
@@ -297,7 +297,7 @@ void Plataforma::reproduccionManual() {
         }
 
         cout << "4. ️  Detener y salir" << endl;
-        cout << "──────────────────────────────────────────────────────" << endl;
+        cout << "|----------------------------------------------|" << endl;
 
         int opcion;
         cout << "\n> Opción: ";
@@ -313,7 +313,7 @@ void Plataforma::reproduccionManual() {
             if (usuarioActivo->esPremium()) {
                 reproductor->anterior();
             } else {
-                cout << "[Error] Función exclusiva para usuarios Premium." << endl;
+                cout << "[Error] Funcion exclusiva para usuarios Premium." << endl;
             }
             break;
 
@@ -321,7 +321,7 @@ void Plataforma::reproduccionManual() {
             if (usuarioActivo->esPremium()) {
                 reproductor->toggleRepetir();
             } else {
-                cout << "[Error] Función exclusiva para usuarios Premium." << endl;
+                cout << "[Error] Funcion exclusiva para usuarios Premium." << endl;
             }
             break;
 
@@ -331,7 +331,7 @@ void Plataforma::reproduccionManual() {
             break;
 
         default:
-            cout << "[Error] Opción inválida." << endl;
+            cout << "[Error] Opcion invalida." << endl;
             break;
         }
     }
@@ -339,16 +339,16 @@ void Plataforma::reproduccionManual() {
 
 // Ver historial de reproducción
 void Plataforma::verHistorialReproduccion() {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║             HISTORIAL DE REPRODUCCIÓN                  ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|        HISTORIAL DE REPRODUCCION             |" << endl;
+    cout << "|----------------------------------------------|" << endl;
 
     if (usuarioActivo->getCantidadHistorico() == 0) {
-        cout << "\n[Info] Aún no has reproducido ninguna canción." << endl;
+        cout << "\n[Info] Aun no has reproducido ninguna cancion." << endl;
         return;
     }
 
-    cout << "\nÚltimas canciones reproducidas:\n" << endl;
+    cout << "\nUltimas canciones reproducidas:\n" << endl;
 
     for (int i = usuarioActivo->getCantidadHistorico() - 1; i >= 0; i--) {
         Medidor::incrementarIteraciones();
@@ -363,30 +363,30 @@ void Plataforma::verHistorialReproduccion() {
 
 // Buscar canción por ID
 void Plataforma::buscarCancion() {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║                  BUSCAR CANCIÓN                        ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|                BUSCAR CANCION                |" << endl;
+    cout << "|----------------------------------------------|" << endl;
 
     int id;
-    cout << "\n> Ingresa el ID de la canción (9 dígitos): ";
+    cout << "\n> Ingresa el ID de la cancion (9 dígitos): ";
     cin >> id;
     limpiarBuffer();
 
     Cancion* cancion = buscarCancionPorId(id);
 
     if (cancion == nullptr) {
-        cout << "\n[Error] No se encontró ninguna canción con ese ID." << endl;
+        cout << "\n[Error] No se encuntra ninguna canción con ese ID." << endl;
         return;
     }
 
-    cout << "\n┌──────────────────────────────────────────────────────┐" << endl;
-    cout << "│  CANCIÓN ENCONTRADA                                  │" << endl;
-    cout << "├──────────────────────────────────────────────────────┤" << endl;
-    cout << "│ Título: " << cancion->getNombre() << endl;
-    cout << "│ ID: " << cancion->getId() << endl;
-    cout << "│ Duración: " << cancion->getDuracion() << " segundos" << endl;
-    cout << "│ Reproducciones: " << cancion->getReproducciones() << endl;
-    cout << "└──────────────────────────────────────────────────────┘" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|  CANCION ENCONTRADA                          |" << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << "| Titulo: " << cancion->getNombre() << endl;
+    cout << "| ID: " << cancion->getId() << endl;
+    cout << "| Duracion: " << cancion->getDuracion() << " segundos" << endl;
+    cout << "| Reproducciones: " << cancion->getReproducciones() << endl;
+    cout << "|----------------------------------------------|" << endl;
 }
 
 // Buscar canción por ID (método auxiliar)
@@ -404,17 +404,17 @@ void Plataforma::gestionarFavoritos() {
     bool enSubmenu = true;
 
     while (enSubmenu) {
-        cout << "\n┌──────────────────────────────────────────────────────┐" << endl;
-        cout << "│          GESTIÓN DE LISTA DE FAVORITOS              │" << endl;
-        cout << "├──────────────────────────────────────────────────────┤" << endl;
-        cout << "│ 1. Ver mis favoritos                                 │" << endl;
-        cout << "│ 2. Agregar canción a favoritos                       │" << endl;
-        cout << "│ 3. Eliminar canción de favoritos                     │" << endl;
-        cout << "│ 4. Volver al menú principal                          │" << endl;
-        cout << "└──────────────────────────────────────────────────────┘" << endl;
+        cout << "\n|----------------------------------------------|" << endl;
+        cout << "|       GESTION DE LISTA DE FAVORITOS          |" << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "| 1. Ver mis favoritos                         |" << endl;
+        cout << "| 2. Agregar canción a favoritos               |" << endl;
+        cout << "| 3. Eliminar cancion de favoritos             |" << endl;
+        cout << "| 4. Volver al menu principal                  |" << endl;
+        cout << "|----------------------------------------------|" << endl;
 
         int opcion;
-        cout << "\n> Opción: ";
+        cout << "\n> Opcion: ";
         cin >> opcion;
         limpiarBuffer();
 
@@ -447,12 +447,12 @@ void Plataforma::verFavoritos() {
     ListaFavoritos* lista = usuarioActivo->getListaFavoritos();
 
     if (lista == nullptr || lista->estaVacia()) {
-        cout << "\n[Info] Tu lista de favoritos está vacía." << endl;
+        cout << "\n[Info] Tu lista de favoritos esta vacía." << endl;
         return;
     }
 
     cout << "\n🎵 MI LISTA DE FAVORITOS (" << lista->getCantidad() << "/10000)" << endl;
-    cout << "──────────────────────────────────────────────────────\n" << endl;
+    cout << "|----------------------------------------------|\n" << endl;
 
     for (int i = 0; i < lista->getCantidad(); i++) {
         Medidor::incrementarIteraciones();
@@ -487,19 +487,19 @@ void Plataforma::agregarAFavoritos() {
     Cancion* cancion = buscarCancionPorId(id);
 
     if (cancion == nullptr) {
-        cout << "[Error] No se encontró una canción con ese ID." << endl;
+        cout << "[Error] No se encontro una canción con ese ID." << endl;
         return;
     }
 
     if (lista->contiene(id)) {
-        cout << "[Error] Esta canción ya está en tus favoritos." << endl;
+        cout << "[Error] Esta cancion ya esta en tus favoritos." << endl;
         return;
     }
 
     if (lista->agregar(cancion)) {
-        cout << "\n[✓] Canción agregada a favoritos: " << cancion->getNombre() << endl;
+        cout << "\n Cancion agregada a favoritos: " << cancion->getNombre() << endl;
     } else {
-        cout << "[Error] No se pudo agregar la canción." << endl;
+        cout << "[Error] No se pudo agregar la cancion." << endl;
     }
 }
 
@@ -508,19 +508,19 @@ void Plataforma::eliminarDeFavoritos() {
     ListaFavoritos* lista = usuarioActivo->getListaFavoritos();
 
     if (lista == nullptr || lista->estaVacia()) {
-        cout << "[Info] Tu lista de favoritos está vacía." << endl;
+        cout << "[Info] Tu lista de favoritos esta vacia." << endl;
         return;
     }
 
     int id;
-    cout << "\n> Ingresa el ID de la canción a eliminar: ";
+    cout << "\n> Ingresa el ID de la cancion a eliminar: ";
     cin >> id;
     limpiarBuffer();
 
     if (lista->eliminar(id)) {
-        cout << "\n[✓] Canción eliminada de favoritos." << endl;
+        cout << "\n Cancion eliminada de favoritos." << endl;
     } else {
-        cout << "[Error] No se encontró esa canción en tus favoritos." << endl;
+        cout << "[Error] No se encontro esa cancion en tus favoritos." << endl;
     }
 }
 
@@ -529,16 +529,16 @@ void Plataforma::reproducirFavoritos() {
     ListaFavoritos* lista = usuarioActivo->getListaFavoritos();
 
     if (lista == nullptr || lista->estaVacia()) {
-        cout << "[Info] Tu lista de favoritos está vacía." << endl;
+        cout << "[Info] Tu lista de favoritos esta vacia." << endl;
         return;
     }
 
-    cout << "\n¿Cómo deseas reproducir tus favoritos?" << endl;
+    cout << "\n¿Como deseas reproducir tus favoritos?" << endl;
     cout << "1. En orden original" << endl;
     cout << "2. Modo aleatorio" << endl;
 
     int opcion;
-    cout << "\n> Opción: ";
+    cout << "\n> Opcion: ";
     cin >> opcion;
     limpiarBuffer();
 
@@ -555,7 +555,7 @@ void Plataforma::seguirListaOtroUsuario() {
     Usuario* otroUsuario = buscarUsuarioPorNickname(nickname);
 
     if (otroUsuario == nullptr || !otroUsuario->esPremium()) {
-        cout << "[Error] No se encontró un usuario premium con ese nickname." << endl;
+        cout << "[Error] No se encuntra un usuario premium con ese nickname." << endl;
         return;
     }
 
@@ -590,7 +590,7 @@ void Plataforma::seguirListaOtroUsuario() {
         }
     }
 
-    cout << "\n[✓] Se agregaron " << agregadas << " canciones nuevas a tus favoritos." << endl;
+    cout << "\n Se agregaron " << agregadas << " canciones nuevas a tus favoritos." << endl;
 }
 
 // MÉTODO PRINCIPAL: EJECUTAR
