@@ -17,21 +17,21 @@ Interfaz::~Interfaz() {
 
 // Mostrar encabezado decorado
 void Interfaz::mostrarEncabezado(const string& titulo) {
-    cout << "\n╔════════════════════════════════════════════════════════╗" << endl;
-    cout << "║              " << titulo;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|         " << titulo;
 
     // Rellenar espacios para centrar
-    int espacios = 42 - titulo.length();
+    int espacios = 37 - titulo.length();
     for (int i = 0; i < espacios; i++) {
         cout << " ";
     }
-    cout << "║" << endl;
-    cout << "╚════════════════════════════════════════════════════════╝" << endl;
+    cout << "|" << endl;
+    cout << "|----------------------------------------------|" << endl;
 }
 
 // Mostrar separador
 void Interfaz::mostrarSeparador() {
-    cout << "─────────────────────────────────────────────────────────" << endl;
+    cout << "|----------------------------------------------|" << endl;
 }
 
 // Limpiar pantalla (multiplataforma)
@@ -53,12 +53,12 @@ void Interfaz::pausar() {
 // Leer opción numérica
 int Interfaz::leerOpcion() {
     int opcion;
-    cout << "\n> Ingresa tu opción: ";
+    cout << "\n> Ingresa tu opcion: ";
 
     while (!(cin >> opcion)) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "[Error] Entrada inválida. Intenta de nuevo: ";
+        cout << "[Error] Entrada invalida. Intenta de nuevo: ";
     }
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -93,11 +93,11 @@ void Interfaz::menuPrincipal() {
     limpiarPantalla();
     mostrarEncabezado("UDEATUNES - STREAMING MUSICAL");
 
-    cout << "\n🎵 Bienvenido a UdeATunes" << endl;
-    cout << "   Tu plataforma de música favorita\n" << endl;
+    cout << "\n            Bienvenido a UdeATunes" << endl;
+    cout << "        Tu plataforma de musica favorita\n" << endl;
 
     mostrarSeparador();
-    cout << "1. Iniciar sesión" << endl;
+    cout << "1. Iniciar sesion" << endl;
     cout << "2. Acerca de" << endl;
     cout << "3. Salir" << endl;
     mostrarSeparador();
@@ -106,7 +106,7 @@ void Interfaz::menuPrincipal() {
 // Menú de login
 void Interfaz::menuLogin() {
     limpiarPantalla();
-    mostrarEncabezado("INICIO DE SESIÓN");
+    mostrarEncabezado("INICIO DE SESION");
     cout << "\nIngresa tus credenciales para acceder a la plataforma.\n" << endl;
 }
 
@@ -127,27 +127,28 @@ void Interfaz::iniciar() {
 
         case 2:
             limpiarPantalla();
-            mostrarEncabezado("ACERCA DE UDEATUNES");
+            mostrarEncabezado("    ACERCA DE UDEATUNES");
             cout << "\n UdeATunes v1.0" << endl;
-            cout << "   Sistema de gestión de streaming musical" << endl;
+            cout << "   Sistema de gestion de streaming musical" << endl;
             cout << "\n Desarrollado por:" << endl;
             cout << "   - Brayan Camilo Silva Porras" << endl;
-            cout << "   - Hamilton Alexander Suárez Pérez" << endl;
+            cout << "   - Hamilton Alexander Suarez Perez" << endl;
             cout << "\n Universidad de Antioquia" << endl;
-            cout << "   Informática 2 - 2025-2" << endl;
+            cout << "   Informatica 2 - 2025-2" << endl;
             pausar();
             break;
 
         case 3:
             limpiarPantalla();
-            mostrarEncabezado("¡HASTA PRONTO!");
-            cout << "\n Gracias por usar UdeATunes" << endl;
-            cout << "   ¡Vuelve pronto por más música!\n" << endl;
+            mostrarEncabezado("       HASTA PRONTO!");
+            cout << "\n           Gracias por usar UdeATunes" << endl;
+            cout << "         Vuelve pronto por mas musica!\n" << endl;
+            cout << "|----------------------------------------------|";
             ejecutando = false;
             break;
 
         default:
-            cout << "\n[Error] Opción inválida. Intenta de nuevo." << endl;
+            cout << "\n[Error] Opción invalida. Intenta de nuevo." << endl;
             pausar();
             break;
         }
