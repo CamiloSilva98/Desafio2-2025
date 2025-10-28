@@ -1,73 +1,64 @@
-#include "reproductor.h"
-#include "medidor.h"
+#include "Reproductor.h"
+#include "Medidor.h"
 #include <iostream>
-#include <thread>
-#include <chrono>
 
-// ============================
-// CONSTRUCTOR Y DESTRUCTOR
-// ============================
+using namespace std;
 
-/**
- * Constructor: Inicializa el reproductor con un usuario
- */
-Reproductor::Reproductor(Usuario* usuario) {
+// Constructor original (sin publicidades)
+Reproductor::Reproductor(Usuario* usuario)
+    : generadorAleatorio(chrono::steady_clock::now().time_since_epoch().count())
+{
     this->usuarioActual = usuario;
+    this->publicidades = nullptr;
     this->indiceActual = -1;
     this->reproduciendo = false;
     this->modoRepetir = false;
     this->cancionesReproducidas = 0;
+    this->indicePublicidadActual = 0;
 
-    // Inicializar semilla aleatoria
-    srand(static_cast<unsigned>(time(0)));
-
-    // Contabilizar memoria
     Medidor::sumarMemoria(sizeof(Reproductor));
 }
 
-/**
- * Destructor: Libera recursos
- */
-Reproductor::~Reproductor() {
-    // NO liberar canciones ni álbumes (son referencias a objetos de otros)
+// Constructor con publicidades
+Reproductor::Reproductor(Usuario* usuario, ArregloDinamico<Publicidad*>* pubs)
+    : generadorAleatorio(chrono::steady_clock::now().time_since_epoch().count())
+{
+    this->usuarioActual = usuario;
+    this->publicidades = pubs;
+    this->indiceActual = -1;
+    this->reproduciendo = false;
+    this->modoRepetir = false;
+    this->cancionesReproducidas = 0;
+    this->indicePublicidadActual = 0;
 
+    Medidor::sumarMemoria(sizeof(Reproductor));
+}
+
+// Destructor
+Reproductor::~Reproductor() {
     Medidor::restarMemoria(sizeof(Reproductor));
 }
 
-// ============================
-// CARGAR CANCIONES
-// ============================
-
-/**
- * Carga todas las canciones de todos los artistas en el sistema
- * También guarda la referencia al álbum de cada canción para mostrar portada
- * Estructura: Artistas -> Álbumes -> Canciones
- */
+// Cargar canciones
 void Reproductor::cargarCanciones(ArregloDinamico<Artista*>& artistas) {
     todasLasCanciones.limpiar();
     albumesPorCancion.limpiar();
 
     cout << "[Reproductor] Cargando canciones de la plataforma..." << endl;
 
-    // Recorrer todos los artistas
     for (int i = 0; i < artistas.getCantidad(); i++) {
         Medidor::incrementarIteraciones();
-
         Artista* artista = artistas.obtener(i);
 
-        // Recorrer todos los álbumes del artista
         for (int j = 0; j < artista->getCantidadAlbumes(); j++) {
             Medidor::incrementarIteraciones();
-
             Album* album = artista->obtenerAlbum(j);
 
-            // Recorrer todas las canciones del álbum
             for (int k = 0; k < album->getCantidadCanciones(); k++) {
                 Medidor::incrementarIteraciones();
-
                 Cancion* cancion = album->obtenerCancion(k);
                 todasLasCanciones.agregar(cancion);
-                albumesPorCancion.agregar(album);  // Guardar referencia al álbum
+                albumesPorCancion.agregar(album);
             }
         }
     }
@@ -76,13 +67,7 @@ void Reproductor::cargarCanciones(ArregloDinamico<Artista*>& artistas) {
          << " canciones en total de " << artistas.getCantidad() << " artistas." << endl;
 }
 
-// ============================
-// MÉTODOS PRIVADOS AUXILIARES
-// ============================
-
-/**
- * Obtiene el máximo de canciones que puede retroceder según el tipo de usuario
- */
+// Obtener máximo retroceso
 int Reproductor::obtenerMaxRetroceso() const {
     if (usuarioActual->esPremium()) {
         return MAX_RETROCESO_PREMIUM;
@@ -90,26 +75,19 @@ int Reproductor::obtenerMaxRetroceso() const {
     return MAX_RETROCESO_ESTANDAR;
 }
 
-/**
- * Verifica si puede retroceder en la cola
- */
+// Puede retroceder
 bool Reproductor::puedeRetroceder() const {
     int maxRetroceso = obtenerMaxRetroceso();
     return (indiceActual > 0 && indiceActual <= maxRetroceso);
 }
 
-/**
- * Verifica si puede avanzar a la siguiente canción
- */
+// Puede avanzar
 bool Reproductor::puedeAvanzar() const {
     return (indiceActual < colaReproduccion.getCantidad() - 1);
 }
 
-/**
- * Obtiene el álbum al que pertenece una canción
- */
+// Obtener álbum de canción
 Album* Reproductor::obtenerAlbumDeCancion(Cancion* cancion) const {
-    // Buscar la canción en el arreglo
     for (int i = 0; i < todasLasCanciones.getCantidad(); i++) {
         Medidor::incrementarIteraciones();
         if (todasLasCanciones.obtener(i) == cancion) {
@@ -119,49 +97,132 @@ Album* Reproductor::obtenerAlbumDeCancion(Cancion* cancion) const {
     return nullptr;
 }
 
-/**
- * Muestra publicidad (simulación)
- * TODO: Integrar con la clase Publicidad que desarrolla el compañero
- */
-void Reproductor::mostrarPublicidad() {
-    cout << "\n|----------------------------------------------|" << endl;
-    cout << "|                     PUBLICIDAD                         |" << endl;
-    cout << "|----------------------------------------------|" << endl;
-    cout << "|   Actualiza a Premium por solo $19.900/mes!               |" << endl;
-    cout << "|   Sin anuncios                                           |" << endl;
-    cout << "|   Audio de alta calidad (320 kbps)                       |" << endl;
-    cout << "|   Listas de favoritos ilimitadas (hasta 10,000 canciones)|" << endl;
-    cout << "|   Retroceder hasta 4 canciones                           |" << endl;
-    cout << "|----------------------------------------------|" << endl;
-    cout << endl;
+// Seleccionar publicidad aleatoria con pesos
+// Seleccionar publicidad aleatoria con pesos y rotación
+Publicidad* Reproductor::seleccionarPublicidadAleatoria() {
+    if (publicidades == nullptr || publicidades->getCantidad() == 0) {
+        return nullptr;
+    }
 
-    // Nota: Aquí se integrará la clase Publicidad con selección ponderada
-    // según prioridades: C=1x, B=2x, AAA=3x
+    // Crear arreglo de publicidades candidatas (excluir la última mostrada)
+    ArregloDinamico<Publicidad*> candidatas;
+    ArregloDinamico<int> pesos;
+    int pesoTotal = 0;
+
+    for (int i = 0; i < publicidades->getCantidad(); i++) {
+        Medidor::incrementarIteraciones();
+        Publicidad* pub = publicidades->obtener(i);
+
+        // Evitar mostrar la misma publicidad consecutivamente
+        if (i != indicePublicidadActual || publicidades->getCantidad() == 1) {
+            candidatas.agregar(pub);
+            int peso = pub->calcularPeso();
+            pesos.agregar(peso);
+            pesoTotal += peso;
+        }
+    }
+
+    if (candidatas.getCantidad() == 0) {
+        // Fallback: si todas fueron excluidas, usar todas
+        for (int i = 0; i < publicidades->getCantidad(); i++) {
+            candidatas.agregar(publicidades->obtener(i));
+            pesos.agregar(publicidades->obtener(i)->calcularPeso());
+            pesoTotal += publicidades->obtener(i)->calcularPeso();
+        }
+    }
+
+    // Generar número aleatorio entre 1 y pesoTotal
+    uniform_int_distribution<int> distribucion(1, pesoTotal);
+    int aleatorio = distribucion(generadorAleatorio);
+
+    // Selección por ruleta ponderada
+    int acumulado = 0;
+    Publicidad* seleccionada = nullptr;
+
+    for (int i = 0; i < candidatas.getCantidad(); i++) {
+        Medidor::incrementarIteraciones();
+        acumulado += pesos.obtener(i);
+
+        if (aleatorio <= acumulado) {
+            seleccionada = candidatas.obtener(i);
+
+            // Actualizar índice de la última publicidad mostrada
+            for (int j = 0; j < publicidades->getCantidad(); j++) {
+                if (publicidades->obtener(j) == seleccionada) {
+                    indicePublicidadActual = j;
+                    break;
+                }
+            }
+
+            // Incrementar contador de veces mostrada
+            seleccionada->setUltimaVezMostrada(seleccionada->getUltimaVezMostrada() + 1);
+
+            return seleccionada;
+        }
+    }
+
+    // Fallback: retornar la primera candidata
+    if (candidatas.getCantidad() > 0) {
+        return candidatas.obtener(0);
+    }
+
+    return publicidades->obtener(0);
 }
 
-/**
- * Genera un índice aleatorio entre 0 y max-1
- */
+// Mostrar publicidad
+void Reproductor::mostrarPublicidad() {
+    Publicidad* pub = seleccionarPublicidadAleatoria();
+
+    if (pub == nullptr) {
+        // Publicidad por defecto si no hay sistema de publicidad
+        cout << "\n|----------------------------------------------|" << endl;
+        cout << "|                     PUBLICIDAD                         |" << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "|   Actualiza a Premium por solo $19.900/mes!               |" << endl;
+        cout << "|   Sin anuncios                                           |" << endl;
+        cout << "|   Audio de alta calidad (320 kbps)                       |" << endl;
+        cout << "|   Listas de favoritos ilimitadas (hasta 10,000 canciones)|" << endl;
+        cout << "|   Retroceder hasta 4 canciones                           |" << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << endl;
+        return;
+    }
+
+    // Mostrar publicidad del sistema
+    string categoriaTexto;
+    switch (pub->getCategoria()) {
+    case 'A':
+        categoriaTexto = " PREMIUM";
+        break;
+    case 'B':
+        categoriaTexto = " DESTACADO";
+        break;
+    case 'C':
+        categoriaTexto = " NORMAL";
+        break;
+    default:
+        categoriaTexto = "ANUNCIO";
+        break;
+    }
+
+    cout << "\n|-----------------------------------------------------------------------------|" << endl;
+    cout << "|                                  PUBLICIDAD                                 |" << endl;
+    cout << "|-----------------------------------------------------------------------------|" << endl;
+    cout << "  " << categoriaTexto << endl;
+    cout << "                                              " << endl;
+    cout << "  " << pub->getMensaje() << endl;
+    cout << "|------------------------------------------------------------------------------|" << endl;
+    cout << endl;
+}
+
+// Generar índice aleatorio (C++)
 int Reproductor::generarIndiceAleatorio(int max) const {
     if (max <= 0) return 0;
-    return rand() % max;
+    uniform_int_distribution<int> distribucion(0, max - 1);
+    return distribucion(const_cast<mt19937&>(generadorAleatorio));
 }
 
-// ============================
-// FUNCIONALIDAD III: REPRODUCCIÓN ALEATORIA CON TEMPORIZADOR
-// ============================
-
-/**
- * REPRODUCCIÓN ALEATORIA CON TEMPORIZADOR AUTOMÁTICO
- *
- * Esta es la Funcionalidad III del preinforme:
- * - Selecciona 5 canciones aleatorias de TODA la plataforma
- * - Cada canción se "reproduce" automáticamente por 3 segundos
- * - Muestra: título, álbum, ruta de audio, ruta de portada
- * - Para usuarios estándar: muestra publicidad cada 2 canciones
- * - NO se puede pausar/detener mientras está activo
- * - Termina automáticamente después de 5 canciones
- */
+// REPRODUCCIÓN ALEATORIA CON TEMPORIZADOR
 void Reproductor::reproduccionAleatoriaTemporizador() {
     if (todasLasCanciones.getCantidad() == 0) {
         cout << "\n[Error] No hay canciones cargadas en el sistema." << endl;
@@ -176,14 +237,11 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
     cout << "|  Usuario: " << usuarioActual->getNickname() << " (" << usuarioActual->getTipoMembresia() << ")                  |" << endl;
     cout << "|--------------------------------------------------|" << endl;
 
-    // Resetear contadores
     cancionesReproducidas = 0;
     colaReproduccion.limpiar();
 
-    // Seleccionar 5 canciones aleatorias
     for (int i = 0; i < CANTIDAD_CANCIONES_TEST; i++) {
         Medidor::incrementarIteraciones();
-
         int indiceAleatorio = generarIndiceAleatorio(todasLasCanciones.getCantidad());
         Cancion* cancion = todasLasCanciones.obtener(indiceAleatorio);
         colaReproduccion.agregar(cancion);
@@ -191,24 +249,18 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
 
     cout << "\n[Iniciando reproduccion automatica...]\n" << endl;
 
-    // Reproducir las 5 canciones con temporizador de 3 segundos cada una
     for (int i = 0; i < CANTIDAD_CANCIONES_TEST; i++) {
         Medidor::incrementarIteraciones();
 
         indiceActual = i;
         Cancion* cancionActual = colaReproduccion.obtener(i);
 
-        // Incrementar reproducciones
         cancionActual->incrementarReproducciones();
         cancionesReproducidas++;
-
-        // Agregar al histórico del usuario
         usuarioActual->agregarAlHistorico(cancionActual);
 
-        // Obtener el álbum de esta canción
         Album* album = obtenerAlbumDeCancion(cancionActual);
 
-        // Obtener ruta según tipo de usuario
         string rutaAudio;
         string calidadTexto;
         if (usuarioActual->esPremium()) {
@@ -230,7 +282,7 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
 
         if (album != nullptr) {
             cout << "|----------------------------------------------|" << endl;
-            cout << "| Album: " << album->getNombre() << endl;
+            cout << "| Álbum: " << album->getNombre() << endl;
             cout << "| Fecha: " << album->getFechaLanzamiento().getDia() << "/"
                  << album->getFechaLanzamiento().getMes() << "/"
                  << album->getFechaLanzamiento().getAño() << endl;
@@ -251,13 +303,12 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
 
         cout << "|----------------------------------------------|" << endl;
 
-        // Mostrar publicidad cada 2 canciones (solo usuarios estándar)
+        // Mostrar publicidad cada 2 canciones para usuarios estándar
         if (usuarioActual->esEstandar() &&
             cancionesReproducidas % INTERVALO_PUBLICIDAD == 0) {
             mostrarPublicidad();
         }
 
-        // TEMPORIZADOR: esperar 3 segundos
         cout << "\n[  Reproduciendo... ";
         cout.flush();
 
@@ -270,7 +321,6 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
         cout << "]\n" << endl;
     }
 
-    // Fin de la reproducción automática
     cout << "\n|----------------------------------------------|" << endl;
     cout << "|       REPRODUCCON AUTOMATICA FINALIZADA                   |" << endl;
     cout << "|----------------------------------------------|" << endl;
@@ -282,98 +332,73 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
     indiceActual = -1;
 }
 
-// ============================
-// REPRODUCCIÓN MANUAL (sin temporizador)
-// ============================
-
-/**
- * Inicia reproducción manual (sin temporizador automático)
- * Para usar con los controles: siguiente, anterior, repetir, detener
- */
+// Iniciar reproducción manual
 void Reproductor::iniciarReproduccionManual() {
     if (todasLasCanciones.getCantidad() == 0) {
         cout << "[Error] No hay canciones cargadas en el sistema." << endl;
         return;
     }
 
-    // Limpiar cola anterior
     colaReproduccion.limpiar();
-
-    // Crear cola aleatoria mezclando las canciones
     ArregloDinamico<int> indices;
 
-    // Llenar con índices del 0 al total-1
     for (int i = 0; i < todasLasCanciones.getCantidad(); i++) {
         Medidor::incrementarIteraciones();
         indices.agregar(i);
     }
 
-    // Mezclar aleatoriamente (algoritmo Fisher-Yates)
     for (int i = indices.getCantidad() - 1; i > 0; i--) {
         Medidor::incrementarIteraciones();
-
         int j = generarIndiceAleatorio(i + 1);
-
-        // Intercambiar
         int temp = indices.obtener(i);
         indices.modificar(i, indices.obtener(j));
         indices.modificar(j, temp);
     }
 
-    // Construir cola con el orden aleatorio
     for (int i = 0; i < indices.getCantidad(); i++) {
         Medidor::incrementarIteraciones();
         int idx = indices.obtener(i);
         colaReproduccion.agregar(todasLasCanciones.obtener(idx));
     }
 
-    // Iniciar desde la primera
     indiceActual = 0;
     reproduciendo = true;
     modoRepetir = false;
     cancionesReproducidas = 0;
 
-    cout << "\n[Reproductor] Reproducción manual iniciada." << endl;
+    cout << "\n[Reproductor] Reproduccion manual iniciada." << endl;
     cout << "Total de canciones en cola: " << colaReproduccion.getCantidad() << endl;
 
     mostrarCancionActual();
 }
 
-/**
- * Detiene la reproducción
- */
+// Detener reproducción
 void Reproductor::detenerReproduccion() {
     if (!reproduciendo) {
-        cout << "[Info] La reproducción ya está detenida." << endl;
+        cout << "[Info] La reproduccion ya está detenida." << endl;
         return;
     }
 
     reproduciendo = false;
     modoRepetir = false;
 
-    cout << "\n[Reproductor] Reproducción detenida." << endl;
+    cout << "\n[Reproductor] Reproduccion detenida." << endl;
 }
 
-// ============================
-// CONTROLES DE REPRODUCCIÓN MANUAL
-// ============================
-
-/**
- * Avanza a la siguiente canción
- */
+// Siguiente
 void Reproductor::siguiente() {
     if (!reproduciendo) {
-        cout << "[Error] No hay reproducción activa. Usa 'Iniciar reproducción manual' primero." << endl;
+        cout << "[Error] No hay reproduccion activa. Usa 'Iniciar reproducción manual' primero." << endl;
         return;
     }
 
     if (modoRepetir) {
-        cout << "[Info] Modo repetir activado. Desactívalo para avanzar." << endl;
+        cout << "[Info] Modo repetir activado. Desactivalo para avanzar." << endl;
         return;
     }
 
     if (!puedeAvanzar()) {
-        cout << "[Info] No hay más canciones en la cola." << endl;
+        cout << "[Info] No hay mas canciones en la cola." << endl;
         detenerReproduccion();
         return;
     }
@@ -393,9 +418,7 @@ void Reproductor::siguiente() {
     mostrarCancionActual();
 }
 
-/**
- * Retrocede a la canción anterior
- */
+// Anterior
 void Reproductor::anterior() {
     if (!reproduciendo) {
         cout << "[Error] No hay reproducción activa." << endl;
@@ -403,17 +426,17 @@ void Reproductor::anterior() {
     }
 
     if (usuarioActual->esEstandar()) {
-        cout << "[Error] Usuarios estándar no pueden retroceder. ¡Actualiza a Premium!" << endl;
+        cout << "[Error] Usuarios estándar no pueden retroceder. Actualiza a Premium!" << endl;
         return;
     }
 
     if (indiceActual <= 0) {
-        cout << "[Info] No hay canción anterior." << endl;
+        cout << "[Info] No hay cancion anterior." << endl;
         return;
     }
 
     if (indiceActual > obtenerMaxRetroceso()) {
-        cout << "[Info] Ya retrocediste el máximo permitido ("
+        cout << "[Info] Ya retrocediste el maximo permitido ("
              << obtenerMaxRetroceso() << " canciones)." << endl;
         return;
     }
@@ -422,9 +445,7 @@ void Reproductor::anterior() {
     mostrarCancionActual();
 }
 
-/**
- * Activa/desactiva el modo repetir (solo premium)
- */
+// Toggle repetir
 void Reproductor::toggleRepetir() {
     if (!reproduciendo) {
         cout << "[Error] No hay reproducción activa." << endl;
@@ -432,7 +453,7 @@ void Reproductor::toggleRepetir() {
     }
 
     if (usuarioActual->esEstandar()) {
-        cout << "[Error] Usuarios estándar no tienen modo repetir. ¡Actualiza a Premium!" << endl;
+        cout << "[Error] Usuarios estándar no tienen modo repetir. Actualiza a Premium!" << endl;
         return;
     }
 
@@ -441,18 +462,11 @@ void Reproductor::toggleRepetir() {
     if (modoRepetir) {
         cout << "\n[Reproductor]  Modo REPETIR activado" << endl;
     } else {
-        cout << "\n[Reproductor]   Modo REPETIR desactivado" << endl;
+        cout << "\n[Reproductor]  Modo REPETIR desactivado" << endl;
     }
 }
 
-// ============================
-// REPRODUCIR FAVORITOS
-// ============================
-
-/**
- * Reproduce la lista de favoritos del usuario (solo Premium)
- * Funcionalidad IV.c del preinforme
- */
+// Reproducir favoritos
 void Reproductor::reproducirFavoritos(bool modoAleatorio) {
     if (!usuarioActual->esPremium()) {
         cout << "[Error] Solo usuarios premium pueden reproducir favoritos." << endl;
@@ -478,7 +492,6 @@ void Reproductor::reproducirFavoritos(bool modoAleatorio) {
 
         for (int i = indices.getCantidad() - 1; i > 0; i--) {
             Medidor::incrementarIteraciones();
-
             int j = generarIndiceAleatorio(i + 1);
             int temp = indices.obtener(i);
             indices.modificar(i, indices.obtener(j));
@@ -512,9 +525,7 @@ void Reproductor::reproducirFavoritos(bool modoAleatorio) {
     mostrarCancionActual();
 }
 
-/**
- * Reproduce una lista específica de canciones
- */
+// Reproducir lista
 void Reproductor::reproducirLista(ArregloDinamico<Cancion*>& lista, bool modoAleatorio) {
     if (lista.getCantidad() == 0) {
         cout << "[Error] La lista está vacía." << endl;
@@ -533,7 +544,6 @@ void Reproductor::reproducirLista(ArregloDinamico<Cancion*>& lista, bool modoAle
 
         for (int i = indices.getCantidad() - 1; i > 0; i--) {
             Medidor::incrementarIteraciones();
-
             int j = generarIndiceAleatorio(i + 1);
             int temp = indices.obtener(i);
             indices.modificar(i, indices.obtener(j));
@@ -564,10 +574,7 @@ void Reproductor::reproducirLista(ArregloDinamico<Cancion*>& lista, bool modoAle
     mostrarCancionActual();
 }
 
-// ============================
-// MÉTODOS DE CONSULTA
-// ============================
-
+// Obtener canción actual
 Cancion* Reproductor::obtenerCancionActual() const {
     if (indiceActual >= 0 && indiceActual < colaReproduccion.getCantidad()) {
         return colaReproduccion.obtener(indiceActual);
@@ -595,14 +602,7 @@ int Reproductor::getCancionesReproducidas() const {
     return cancionesReproducidas;
 }
 
-// ============================
-// MOSTRAR CANCIÓN ACTUAL
-// ============================
-
-/**
- * Muestra la información de la canción que se está reproduciendo
- * Incluye: nombre, ruta del audio según calidad, y portada del álbum
- */
+// Mostrar canción actual
 void Reproductor::mostrarCancionActual() const {
     Cancion* cancion = obtenerCancionActual();
 
@@ -611,10 +611,8 @@ void Reproductor::mostrarCancionActual() const {
         return;
     }
 
-    // Obtener el álbum
     Album* album = obtenerAlbumDeCancion(cancion);
 
-    // Obtener ruta según tipo de usuario
     string rutaAudio;
     if (usuarioActual->esPremium()) {
         rutaAudio = cancion->getRuta320();
@@ -624,16 +622,16 @@ void Reproductor::mostrarCancionActual() const {
 
     // Mostrar información
     cout << "\n|----------------------------------------------|" << endl;
-    cout << "| 🎵 REPRODUCIENDO AHORA                           │" << endl;
+    cout << "|   REPRODUCIENDO AHORA                           ¦" << endl;
     cout << "|----------------------------------------------|" << endl;
-    cout << "| Canción: " << cancion->getNombre() << endl;
+    cout << "| Cancion: " << cancion->getNombre() << endl;
     cout << "| ID: " << cancion->getId() << endl;
-    cout << "| Duración: " << cancion->getDuracion() << " segundos" << endl;
-    cout << "| Calidad: " << (usuarioActual->esPremium() ? "320 kbps (Premium)" : "128 kbps (Estándar)") << endl;
+    cout << "| Duracion: " << cancion->getDuracion() << " segundos" << endl;
+    cout << "| Calidad: " << (usuarioActual->esPremium() ? "320 kbps (Premium)" : "128 kbps (Estandar)") << endl;
 
     if (album != nullptr) {
         cout << "|----------------------------------------------|" << endl;
-        cout << "| Álbum: " << album->getNombre() << endl;
+        cout << "| Album: " << album->getNombre() << endl;
     }
 
     cout << "|----------------------------------------------|" << endl;
@@ -642,12 +640,12 @@ void Reproductor::mostrarCancionActual() const {
 
     if (album != nullptr) {
         cout << "|----------------------------------------------|" << endl;
-        cout << "|   Portada del álbum:" << endl;
+        cout << "|   Portada del album:" << endl;
         cout << "| " << album->getRutaPortada() << endl;
     }
 
     cout << "|----------------------------------------------|" << endl;
-    cout << "| Posición: " << (indiceActual + 1) << "/" << colaReproduccion.getCantidad() << endl;
+    cout << "| Posicion: " << (indiceActual + 1) << "/" << colaReproduccion.getCantidad() << endl;
 
     if (modoRepetir) {
         cout << "| Estado:  MODO REPETIR ACTIVADO" << endl;

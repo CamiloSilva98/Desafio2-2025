@@ -67,21 +67,53 @@ void Plataforma::limpiarBuffer() {
 }
 
 // Autenticación de usuario
+// Autenticación de usuario
 bool Plataforma::autenticar() {
     string nickname;
     cout << "\n> Ingresa tu nickname: ";
     getline(cin, nickname);
+
+    cout << "[Debug] Buscando usuario: " << nickname << endl;
 
     usuarioActivo = buscarUsuarioPorNickname(nickname);
 
     if (usuarioActivo == nullptr) {
         cout << "\n[Error] Usuario no encontrado." << endl;
         cout << "Verifica tu nickname e intenta de nuevo.\n" << endl;
+
+        // Mostrar usuarios disponibles
+        cout << "\nUsuarios disponibles:" << endl;
+        for (int i = 0; i < usuarios.getCantidad(); i++) {
+            cout << "  - " << usuarios.obtener(i)->getNickname() << endl;
+        }
+
         return false;
     }
 
-    reproductor = new Reproductor(usuarioActivo);
-    reproductor->cargarCanciones(artistas);
+    cout << "[Debug] Usuario encontrado: " << usuarioActivo->getNickname() << endl;
+    cout << "[Debug] Tipo: " << usuarioActivo->getTipoMembresia() << endl;
+
+    // Crear reproductor con validación
+    try {
+        if (publicidades.getCantidad() > 0) {
+            reproductor = new Reproductor(usuarioActivo, &publicidades);
+            cout << "[Debug] Reproductor creado con " << publicidades.getCantidad() << " publicidades" << endl;
+        } else {
+            reproductor = new Reproductor(usuarioActivo);
+            cout << "[Debug] Reproductor creado sin publicidades" << endl;
+        }
+
+        if (artistas.getCantidad() > 0) {
+            reproductor->cargarCanciones(artistas);
+            cout << "[Debug] Canciones cargadas correctamente" << endl;
+        } else {
+            cout << "[Advertencia] No hay artistas cargados" << endl;
+        }
+
+    } catch (const exception& e) {
+        cout << "[Error] Exception al crear reproductor: " << e.what() << endl;
+        return false;
+    }
 
     sesionActiva = true;
     return true;
@@ -103,7 +135,7 @@ void Plataforma::cerrarSesion() {
 // Mostrar bienvenida personalizada
 void Plataforma::mostrarBienvenida() {
     cout << "\n|----------------------------------------------|" << endl;
-    cout << "|              BIENVENIDO A UDEATUNES!                  |" << endl;
+    cout << "|           BIENVENIDO A UDEATUNES!            |" << endl;
     cout << "|----------------------------------------------|" << endl;
 
     cout << "\n Usuario: " << usuarioActivo->getNickname() << endl;
@@ -290,14 +322,14 @@ void Plataforma::reproduccionManual() {
         cout << "\n|----------------------------------------------|" << endl;
         cout << "  CONTROLES" << endl;
         cout << "|----------------------------------------------|" << endl;
-        cout << "1. ️  Siguiente" << endl;
+        cout << "1. Siguiente" << endl;
 
         if (usuarioActivo->esPremium()) {
-            cout << "2. ️  Anterior (Premium)" << endl;
-            cout << "3.  Repetir ON/OFF (Premium)" << endl;
+            cout << "2. Anterior (Premium)" << endl;
+            cout << "3. Repetir ON/OFF (Premium)" << endl;
         }
 
-        cout << "4. ️  Detener y salir" << endl;
+        cout << "4. Detener y salir" << endl;
         cout << "|----------------------------------------------|" << endl;
 
         int opcion;
