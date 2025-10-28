@@ -72,7 +72,7 @@ void Reproductor::cargarCanciones(ArregloDinamico<Artista*>& artistas) {
         }
     }
 
-    cout << "[Reproductor] ✓ Cargadas " << todasLasCanciones.getCantidad()
+    cout << "[Reproductor]  Cargadas " << todasLasCanciones.getCantidad()
          << " canciones en total de " << artistas.getCantidad() << " artistas." << endl;
 }
 
@@ -124,15 +124,15 @@ Album* Reproductor::obtenerAlbumDeCancion(Cancion* cancion) const {
  * TODO: Integrar con la clase Publicidad que desarrolla el compañero
  */
 void Reproductor::mostrarPublicidad() {
-    cout << "\n╔════════════════════════════════════════════════════════════╗" << endl;
-    cout << "║                    🎵 PUBLICIDAD 🎵                        ║" << endl;
-    cout << "╠════════════════════════════════════════════════════════════╣" << endl;
-    cout << "║  ¡Actualiza a Premium por solo $19.900/mes!               ║" << endl;
-    cout << "║  ✓ Sin anuncios                                            ║" << endl;
-    cout << "║  ✓ Audio de alta calidad (320 kbps)                       ║" << endl;
-    cout << "║  ✓ Listas de favoritos ilimitadas (hasta 10,000 canciones)║" << endl;
-    cout << "║  ✓ Retroceder hasta 4 canciones                           ║" << endl;
-    cout << "╚════════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|                     PUBLICIDAD                         |" << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << "|   Actualiza a Premium por solo $19.900/mes!               |" << endl;
+    cout << "|   Sin anuncios                                           |" << endl;
+    cout << "|   Audio de alta calidad (320 kbps)                       |" << endl;
+    cout << "|   Listas de favoritos ilimitadas (hasta 10,000 canciones)|" << endl;
+    cout << "|   Retroceder hasta 4 canciones                           |" << endl;
+    cout << "|----------------------------------------------|" << endl;
     cout << endl;
 
     // Nota: Aquí se integrará la clase Publicidad con selección ponderada
@@ -168,13 +168,13 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
         return;
     }
 
-    cout << "\n╔════════════════════════════════════════════════════════════╗" << endl;
-    cout << "║       REPRODUCCIÓN ALEATORIA - MODO AUTOMÁTICO             ║" << endl;
-    cout << "╠════════════════════════════════════════════════════════════╣" << endl;
-    cout << "║  Se reproducirán 5 canciones aleatorias                   ║" << endl;
-    cout << "║  Cada canción durará 3 segundos automáticamente           ║" << endl;
-    cout << "║  Usuario: " << usuarioActual->getNickname() << " (" << usuarioActual->getTipoMembresia() << ")" << endl;
-    cout << "╚════════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|--------------------------------------------------|" << endl;
+    cout << "|  REPRODUCCION ALEATORIA - MODO AUTOMATICO        |" << endl;
+    cout << "|--------------------------------------------------|" << endl;
+    cout << "|  Se reproduciran 5 canciones aleatorias          |" << endl;
+    cout << "|  Cada cancion durara 3 segundos automaticamente  |" << endl;
+    cout << "|  Usuario: " << usuarioActual->getNickname() << " (" << usuarioActual->getTipoMembresia() << ")                  |" << endl;
+    cout << "|--------------------------------------------------|" << endl;
 
     // Resetear contadores
     cancionesReproducidas = 0;
@@ -189,7 +189,7 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
         colaReproduccion.agregar(cancion);
     }
 
-    cout << "\n[Iniciando reproducción automática...]\n" << endl;
+    cout << "\n[Iniciando reproduccion automatica...]\n" << endl;
 
     // Reproducir las 5 canciones con temporizador de 3 segundos cada una
     for (int i = 0; i < CANTIDAD_CANCIONES_TEST; i++) {
@@ -216,40 +216,40 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
             calidadTexto = "320 kbps (Premium)";
         } else {
             rutaAudio = cancionActual->getRuta128();
-            calidadTexto = "128 kbps (Estándar)";
+            calidadTexto = "128 kbps (Estandar)";
         }
 
         // MOSTRAR INFORMACIÓN DE LA CANCIÓN ACTUAL
-        cout << "\n┌────────────────────────────────────────────────────────────┐" << endl;
-        cout << "│ 🎵 CANCIÓN " << (i+1) << "/5 - REPRODUCIENDO AHORA" << endl;
-        cout << "├────────────────────────────────────────────────────────────┤" << endl;
-        cout << "│ Título: " << cancionActual->getNombre() << endl;
-        cout << "│ ID: " << cancionActual->getId() << endl;
-        cout << "│ Duración: " << cancionActual->getDuracion() << " segundos" << endl;
-        cout << "│ Calidad: " << calidadTexto << endl;
+        cout << "\n|----------------------------------------------|" << endl;
+        cout << "|  CANCION " << (i+1) << "/5 - REPRODUCIENDO AHORA" << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "| Titulo: " << cancionActual->getNombre() << endl;
+        cout << "| ID: " << cancionActual->getId() << endl;
+        cout << "| Duracion: " << cancionActual->getDuracion() << " segundos" << endl;
+        cout << "| Calidad: " << calidadTexto << endl;
 
         if (album != nullptr) {
-            cout << "├────────────────────────────────────────────────────────────┤" << endl;
-            cout << "│ Álbum: " << album->getNombre() << endl;
-            cout << "│ Fecha: " << album->getFechaLanzamiento().getDia() << "/"
+            cout << "|----------------------------------------------|" << endl;
+            cout << "| Album: " << album->getNombre() << endl;
+            cout << "| Fecha: " << album->getFechaLanzamiento().getDia() << "/"
                  << album->getFechaLanzamiento().getMes() << "/"
                  << album->getFechaLanzamiento().getAño() << endl;
-            cout << "│ Sello: " << album->getSelloDisco() << endl;
+            cout << "| Sello: " << album->getSelloDisco() << endl;
         }
 
-        cout << "├────────────────────────────────────────────────────────────┤" << endl;
-        cout << "│ 📁 RUTA DEL ARCHIVO DE AUDIO:" << endl;
-        cout << "│ " << rutaAudio << endl;
-        cout << "├────────────────────────────────────────────────────────────┤" << endl;
-        cout << "│ 🖼  RUTA DE LA PORTADA DEL ÁLBUM:" << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "|  RUTA DEL ARCHIVO DE AUDIO:" << endl;
+        cout << "| " << rutaAudio << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "|   RUTA DE LA PORTADA DEL ÁLBUM:" << endl;
 
         if (album != nullptr) {
-            cout << "│ " << album->getRutaPortada() << endl;
+            cout << "| " << album->getRutaPortada() << endl;
         } else {
-            cout << "│ [Portada no disponible]" << endl;
+            cout << "| [Portada no disponible]" << endl;
         }
 
-        cout << "└────────────────────────────────────────────────────────────┘" << endl;
+        cout << "|----------------------------------------------|" << endl;
 
         // Mostrar publicidad cada 2 canciones (solo usuarios estándar)
         if (usuarioActual->esEstandar() &&
@@ -258,7 +258,7 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
         }
 
         // TEMPORIZADOR: esperar 3 segundos
-        cout << "\n[⏱  Reproduciendo... ";
+        cout << "\n[  Reproduciendo... ";
         cout.flush();
 
         for (int seg = 1; seg <= DURACION_CANCION_SEGUNDOS; seg++) {
@@ -267,16 +267,16 @@ void Reproductor::reproduccionAleatoriaTemporizador() {
             cout.flush();
         }
 
-        cout << "✓]\n" << endl;
+        cout << "]\n" << endl;
     }
 
     // Fin de la reproducción automática
-    cout << "\n╔════════════════════════════════════════════════════════════╗" << endl;
-    cout << "║       REPRODUCCIÓN AUTOMÁTICA FINALIZADA                   ║" << endl;
-    cout << "╠════════════════════════════════════════════════════════════╣" << endl;
-    cout << "║  Total reproducido: " << CANTIDAD_CANCIONES_TEST << " canciones" << endl;
-    cout << "║  Usuario: " << usuarioActual->getNickname() << endl;
-    cout << "╚════════════════════════════════════════════════════════════╝" << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "|       REPRODUCCON AUTOMATICA FINALIZADA                   |" << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << "|  Total reproducido: " << CANTIDAD_CANCIONES_TEST << " canciones" << endl;
+    cout << "|  Usuario: " << usuarioActual->getNickname() << endl;
+    cout << "|----------------------------------------------|" << endl;
 
     reproduciendo = false;
     indiceActual = -1;
@@ -439,9 +439,9 @@ void Reproductor::toggleRepetir() {
     modoRepetir = !modoRepetir;
 
     if (modoRepetir) {
-        cout << "\n[Reproductor] 🔁 Modo REPETIR activado" << endl;
+        cout << "\n[Reproductor]  Modo REPETIR activado" << endl;
     } else {
-        cout << "\n[Reproductor] ⏭  Modo REPETIR desactivado" << endl;
+        cout << "\n[Reproductor]   Modo REPETIR desactivado" << endl;
     }
 }
 
@@ -623,35 +623,35 @@ void Reproductor::mostrarCancionActual() const {
     }
 
     // Mostrar información
-    cout << "\n┌──────────────────────────────────────────────────┐" << endl;
-    cout << "│ 🎵 REPRODUCIENDO AHORA                           │" << endl;
-    cout << "├──────────────────────────────────────────────────┤" << endl;
-    cout << "│ Canción: " << cancion->getNombre() << endl;
-    cout << "│ ID: " << cancion->getId() << endl;
-    cout << "│ Duración: " << cancion->getDuracion() << " segundos" << endl;
-    cout << "│ Calidad: " << (usuarioActual->esPremium() ? "320 kbps (Premium)" : "128 kbps (Estándar)") << endl;
+    cout << "\n|----------------------------------------------|" << endl;
+    cout << "| 🎵 REPRODUCIENDO AHORA                           │" << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << "| Canción: " << cancion->getNombre() << endl;
+    cout << "| ID: " << cancion->getId() << endl;
+    cout << "| Duración: " << cancion->getDuracion() << " segundos" << endl;
+    cout << "| Calidad: " << (usuarioActual->esPremium() ? "320 kbps (Premium)" : "128 kbps (Estándar)") << endl;
 
     if (album != nullptr) {
-        cout << "├──────────────────────────────────────────────────┤" << endl;
-        cout << "│ Álbum: " << album->getNombre() << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "| Álbum: " << album->getNombre() << endl;
     }
 
-    cout << "├──────────────────────────────────────────────────┤" << endl;
-    cout << "│ 📁 Ruta de audio:" << endl;
-    cout << "│ " << rutaAudio << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << "|  Ruta de audio:" << endl;
+    cout << "| " << rutaAudio << endl;
 
     if (album != nullptr) {
-        cout << "├──────────────────────────────────────────────────┤" << endl;
-        cout << "│ 🖼  Portada del álbum:" << endl;
-        cout << "│ " << album->getRutaPortada() << endl;
+        cout << "|----------------------------------------------|" << endl;
+        cout << "|   Portada del álbum:" << endl;
+        cout << "| " << album->getRutaPortada() << endl;
     }
 
-    cout << "├──────────────────────────────────────────────────┤" << endl;
-    cout << "│ Posición: " << (indiceActual + 1) << "/" << colaReproduccion.getCantidad() << endl;
+    cout << "|----------------------------------------------|" << endl;
+    cout << "| Posición: " << (indiceActual + 1) << "/" << colaReproduccion.getCantidad() << endl;
 
     if (modoRepetir) {
-        cout << "│ Estado: 🔁 MODO REPETIR ACTIVADO" << endl;
+        cout << "| Estado:  MODO REPETIR ACTIVADO" << endl;
     }
 
-    cout << "└──────────────────────────────────────────────────┘" << endl;
+    cout << "|----------------------------------------------|" << endl;
 }

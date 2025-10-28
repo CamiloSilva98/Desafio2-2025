@@ -140,7 +140,7 @@ void Interfaz::iniciar() {
 
         case 3:
             limpiarPantalla();
-            mostrarEncabezado("HASTA PRONTO!");
+            mostrarEncabezado("       HASTA PRONTO!");
             cout << "\n           Gracias por usar UdeATunes" << endl;
             cout << "         Vuelve pronto por mas musica!\n" << endl;
             cout << "|----------------------------------------------|";

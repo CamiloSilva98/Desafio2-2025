@@ -103,25 +103,26 @@ void Plataforma::cerrarSesion() {
 // Mostrar bienvenida personalizada
 void Plataforma::mostrarBienvenida() {
     cout << "\n|----------------------------------------------|" << endl;
-    cout << "|              ¡BIENVENIDO A UDEATUNES!                  |" << endl;
+    cout << "|              BIENVENIDO A UDEATUNES!                  |" << endl;
     cout << "|----------------------------------------------|" << endl;
 
     cout << "\n Usuario: " << usuarioActivo->getNickname() << endl;
     cout << " Ubicacion: " << usuarioActivo->getCiudad() << ", "
          << usuarioActivo->getPais() << endl;
-    cout << "️  Membresia: " << usuarioActivo->getTipoMembresia() << endl;
+    cout << " Membresia: " << usuarioActivo->getTipoMembresia() << endl;
+
 
     if (usuarioActivo->esPremium()) {
         cout << "\n Disfruta de tus beneficios premium:" << endl;
-        cout << "   • Sin publicidad" << endl;
-        cout << "   • Audio en alta calidad (320 kbps)" << endl;
-        cout << "   • Listas de favoritos personalizadas" << endl;
-        cout << "   • Retroceder hasta 4 canciones" << endl;
+        cout << "    Sin publicidad" << endl;
+        cout << "    Audio en alta calidad (320 kbps)" << endl;
+        cout << "    Listas de favoritos personalizadas" << endl;
+        cout << "    Retroceder hasta 4 canciones" << endl;
     } else {
         cout << "\n Actualiza a Premium y disfruta:" << endl;
-        cout << "   • Sin anuncios publicitarios" << endl;
-        cout << "   • Mejor calidad de audio" << endl;
-        cout << "   • Listas de favoritos ilimitadas" << endl;
+        cout << "    Sin anuncios publicitarios" << endl;
+        cout << "    Mejor calidad de audio" << endl;
+        cout << "    Listas de favoritos ilimitadas" << endl;
     }
 
     cout << "\n" << endl;
