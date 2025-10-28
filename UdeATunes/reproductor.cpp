@@ -375,7 +375,7 @@ void Reproductor::iniciarReproduccionManual() {
 // Detener reproducción
 void Reproductor::detenerReproduccion() {
     if (!reproduciendo) {
-        cout << "[Info] La reproduccion ya está detenida." << endl;
+        cout << "[Info] La reproduccion ya esta detenida." << endl;
         return;
     }
 
@@ -388,7 +388,7 @@ void Reproductor::detenerReproduccion() {
 // Siguiente
 void Reproductor::siguiente() {
     if (!reproduciendo) {
-        cout << "[Error] No hay reproduccion activa. Usa 'Iniciar reproducción manual' primero." << endl;
+        cout << "[Error] No hay reproduccion activa. Usa 'Iniciar reproduccion manual' primero." << endl;
         return;
     }
 
@@ -528,7 +528,7 @@ void Reproductor::reproducirFavoritos(bool modoAleatorio) {
 // Reproducir lista
 void Reproductor::reproducirLista(ArregloDinamico<Cancion*>& lista, bool modoAleatorio) {
     if (lista.getCantidad() == 0) {
-        cout << "[Error] La lista está vacía." << endl;
+        cout << "[Error] La lista está vacia." << endl;
         return;
     }
 
@@ -607,7 +607,7 @@ void Reproductor::mostrarCancionActual() const {
     Cancion* cancion = obtenerCancionActual();
 
     if (cancion == nullptr) {
-        cout << "[Info] No hay canción en reproducción." << endl;
+        cout << "[Info] No hay canción en reproduccion." << endl;
         return;
     }
 

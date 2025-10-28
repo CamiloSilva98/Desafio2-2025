@@ -67,57 +67,36 @@ void Plataforma::limpiarBuffer() {
 }
 
 // Autenticación de usuario
-// Autenticación de usuario
 bool Plataforma::autenticar() {
     string nickname;
-    cout << "\n> Ingresa tu nickname: ";
-    getline(cin, nickname);
+    bool usuarioEncontrado = false;
 
-    cout << "[Debug] Buscando usuario: " << nickname << endl;
+    cout << "\n|----------------------------------------------|\n";
+    cout << "|             INICIO DE SESION UdeATunes       |\n";
+    cout << "|----------------------------------------------|\n";
 
-    usuarioActivo = buscarUsuarioPorNickname(nickname);
+    int intentos = 0;
 
-    if (usuarioActivo == nullptr) {
-        cout << "\n[Error] Usuario no encontrado." << endl;
-        cout << "Verifica tu nickname e intenta de nuevo.\n" << endl;
+    do {
+        cout << "\n> Ingresa tu nickname: ";
+        getline(cin, nickname);
 
-        // Mostrar usuarios disponibles
-        cout << "\nUsuarios disponibles:" << endl;
-        for (int i = 0; i < usuarios.getCantidad(); i++) {
-            cout << "  - " << usuarios.obtener(i)->getNickname() << endl;
-        }
+        usuarioActivo = buscarUsuarioPorNickname(nickname);
 
-        return false;
-    }
+        if (usuarioActivo == nullptr) {
+            cout << "\n|----------------------------------------------|\n";
+            cout << "|  Usuario no encontrado. Intenta nuevamente.  |\n";
+            cout << "|----------------------------------------------|\n";
 
-    cout << "[Debug] Usuario encontrado: " << usuarioActivo->getNickname() << endl;
-    cout << "[Debug] Tipo: " << usuarioActivo->getTipoMembresia() << endl;
-
-    // Crear reproductor con validación
-    try {
-        if (publicidades.getCantidad() > 0) {
-            reproductor = new Reproductor(usuarioActivo, &publicidades);
-            cout << "[Debug] Reproductor creado con " << publicidades.getCantidad() << " publicidades" << endl;
+            intentos++;
         } else {
-            reproductor = new Reproductor(usuarioActivo);
-            cout << "[Debug] Reproductor creado sin publicidades" << endl;
+            usuarioEncontrado = true;
         }
 
-        if (artistas.getCantidad() > 0) {
-            reproductor->cargarCanciones(artistas);
-            cout << "[Debug] Canciones cargadas correctamente" << endl;
-        } else {
-            cout << "[Advertencia] No hay artistas cargados" << endl;
-        }
-
-    } catch (const exception& e) {
-        cout << "[Error] Exception al crear reproductor: " << e.what() << endl;
-        return false;
-    }
-
-    sesionActiva = true;
+    } while (!usuarioEncontrado);
     return true;
 }
+
 
 // Cerrar sesión
 void Plataforma::cerrarSesion() {
@@ -401,7 +380,7 @@ void Plataforma::buscarCancion() {
     cout << "|----------------------------------------------|" << endl;
 
     int id;
-    cout << "\n> Ingresa el ID de la cancion (9 dígitos): ";
+    cout << "\n> Ingresa el ID de la cancion (9 digitos): ";
     cin >> id;
     limpiarBuffer();
 
@@ -469,7 +448,7 @@ void Plataforma::gestionarFavoritos() {
             break;
 
         default:
-            cout << "[Error] Opción inválida." << endl;
+            cout << "[Error] Opcion invalida." << endl;
             break;
         }
     }

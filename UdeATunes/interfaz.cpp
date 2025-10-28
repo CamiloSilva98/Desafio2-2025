@@ -148,7 +148,7 @@ void Interfaz::iniciar() {
             break;
 
         default:
-            cout << "\n[Error] Opción invalida. Intenta de nuevo." << endl;
+            cout << "\n[Error] Opcion invalida. Intenta de nuevo." << endl;
             pausar();
             break;
         }
